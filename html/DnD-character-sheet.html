@@ -1,0 +1,102 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="UTF-8">
+  </head>
+  <body>
+    <h2>CHARACTER NAME Sense Amid Madness, Wisdom Admist Folly</h2>
+    <div><b>Armor Class</b> 12</div>
+    <div><b>Hit Points</b> 29 3d8</div>
+    <div><b>Speed</b> 25</div>
+    <table>
+      <tr>
+        <td class="ability-score-td"><b>STR</b> 
+          <span id="ability-score-str-span">10</span> 
+          (<span id="ability-mod-str-span">+0</span>)
+        </td>
+        <td class="ability-score-td"><b>DEX</b> 
+          <span id="ability-score-dex-span">10</span> 
+          (<span id="ability-mod-dex-span">+0</span>)
+        </td>
+        <td class="ability-score-td"><b>CON</b> 
+          <span id="ability-score-con-span">10</span> 
+          (<span id="ability-mod-con-span">+0</span>)
+        </td>
+        <td class="ability-score-td"><b>INT</b> 
+          <span id="ability-score-int-span">10</span> 
+          (<span id="ability-mod-int-span">+0</span>)
+        </td>
+        <td class="ability-score-td"><b>WIS</b> 
+          <span id="ability-score-wis-span">10</span> 
+          (<span id="ability-mod-wis-span">+0</span>)
+        </td>
+        <td class="ability-score-td"><b>CHA</b> 
+          <span id="ability-score-cha-span">10</span> 
+          (<span id="ability-mod-cha-span">+0</span>)
+        </td>
+      </tr>
+    </table>
+    <h2>Base Ability Scores</h2>
+    <table id="base-ability-scores">
+      <tr>
+        <td class="ability-score-td">
+          <b>STR</b> 
+          <input type="text" value=10 class="base-ability-score-input" data-base-ability-score="str">
+        </td>
+        <td class="ability-score-td">
+          <b>DEX</b> 
+          <input type="text" value=10 class="base-ability-score-input" data-base-ability-score="dex">
+        </td>
+        <td class="ability-score-td">
+          <b>CON</b> 
+          <input type="text" value=10 class="base-ability-score-input" data-base-ability-score="con">
+        </td>
+        <td class="ability-score-td">
+          <b>INT</b> 
+          <input type="text" value=10 class="base-ability-score-input" data-base-ability-score="int">
+        </td>
+        <td class="ability-score-td">
+          <b>WIS</b> 
+          <input type="text" value=10 class="base-ability-score-input" data-base-ability-score="wis">
+        </td>
+        <td class="ability-score-td">
+          <b>CHA</b> 
+          <input type="text" value=10 class="base-ability-score-input" data-base-ability-score="cha">
+        </td>
+      </tr>
+    </table>
+  </body>
+  <h2>Race</h2>
+  <div id="hidden-feature">
+    <div><span><b>Name: </b></span><input data-feature="name"></div>
+    <div>
+      <div><b>Description: </b></div>
+      <textarea cols="64" data-feature="description"></textarea>
+    </div>
+    <h3>Mechanics</h3>
+    <div id="hidden-mechanic">
+      <div><span><b>Mechanic Name: </b></span><input data-mechanic="name"></div>
+      <div>
+        <div><b>Mechanic Description: </b></div>
+        <textarea cols="64" data-mechanic="description"></textarea>
+      </div>
+      <div><b>Effects</b></div>
+      <input placeholder="Attribute" data-mechanic="attribute">
+      <input size="64" placeholder="Calculation" data-mechanic="calculation">
+    </div>
+    <div><input type="button" value="Add Mechanic"></div>
+  </div>
+
+  <link rel="stylesheet" href="../css/DnD-character-sheet.css">
+
+  
+  <script src="../js/Calculation.js"></script>
+  <script src="../js/Attribute.js"></script>
+  <script src="../js/Controller.js"></script>
+  <!-- <script src="../js/Model.js"></script> -->
+  <script src="../js/View.js"></script>
+  <script src="../js/ViewMaster.js"></script>
+  <script src="../js/Main.js"></script>
+  <!-- <script src="../js/test.js"></script> -->
+
+</html>
