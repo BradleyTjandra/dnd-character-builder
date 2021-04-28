@@ -34,20 +34,25 @@ class Controller {
     
     function pairAbilityScores(value) {
       let total = this.attributeList[`total-ability-score-${value}`];
-      let calc = new Calculation(
-        `{{base-ability-score-${value}}}`, 
-        this.attributeList,
-        this
-        );
-      total.setInput(calc);
+      let effectBaseToTotal = new Effect(total, `{{base-ability-score-${value}}}`, this.attributeList, this, "calculated");
+      total.addInput(effectBaseToTotal);
+
+      // constructor(attribute, effectInfo, attributeList, source, effectType = "fixed") {
+      // let calc = new Calculation(
+      //   `{{base-ability-score-${value}}}`, 
+      //   this.attributeList,
+      //   this
+      //   );
+      // total.setInput(calc);
 
       let mod = this.attributeList[`total-ability-mod-${value}`];
-      let mod_calc = new Calculation(
-        `({{total-ability-score-${value}}}-10)/2`,
-        this.attributeList,
-        this
-        );
-      mod.setInput(mod_calc);
+      let effectMod = new Effect(mod, `({{total-ability-score-${value}}}-10)/2`, this.attributeList, this, "calculated");
+      // let mod_calc = new Calculation(
+      //   `({{total-ability-score-${value}}}-10)/2`,
+      //   this.attributeList,
+      //   this
+      //   );
+      mod.addInput(effectMod);
 
     }
 

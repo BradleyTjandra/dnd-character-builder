@@ -18,8 +18,8 @@ class Attribute {
     
       this.value = 0;
 
-      for (let inp of this.inputs) {
-        this.value += inp.calculate();
+      for (let effect of this.inputs) {
+        this.value += effect.value;
       }
     }
 
@@ -33,10 +33,10 @@ class Attribute {
     this.triggerListeners();
   }
 
-  removeInputs() {
-    this.inputs.forEach(value => value.removeDependent(this));
-    this.inputs = [];
-  }
+  // removeInputs() {
+  //   this.inputs.forEach(value => value.removeDependent(this));
+  //   this.inputs = [];
+  // }
 
   removeDependent(attribute) {
     this.listeners = this.listeners.filter(item => item.name != attribute.name);
@@ -47,14 +47,21 @@ class Attribute {
     this.linkedViews.forEach((value) => value.update());
   }
 
-  addInput(calculation) {
+  addInput(effect) {
 
-    this.inputs.push(calculation);
-    calculation.inputs.forEach((value) => value.listeners.push(this));
+    this.inputs.push(effect);
+    try {
+      effect.inputs.forEach((value) => value.listeners.push(this));
+    } catch (e) {
+      // alert(this.name);
+      // alert(effect.inputs.length);
+      // alert(Array.from(effect.inputs));
+      // alert(Array.from(effect.inputs)[0]);
+      throw e;
+    }
 
     this.calculate();
 
   }
 
 }
-

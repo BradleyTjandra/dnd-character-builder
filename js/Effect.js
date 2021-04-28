@@ -2,20 +2,22 @@
 
 class Effect {
   
-  constructor(name, attribute, effectInfo, attributeList, source, effectType = "fixed") {
-    this.name = name;
+  constructor(attribute, effectInfo, attributeList, source, effectType = "fixed") {
+    // this.name = name;
     this.attribute = attribute;
     this.effectInfo = effectInfo;
     this.attributeList = attributeList;
     this.source = source;
     this.effectType = effectType; // fixed, calculated, list (for spells), etc.
+    this.inputs = [];
     this.setup();
   }
 
   setup() {
     
     if (this.effectType == "calculated") {
-      this.formula = new Calculation(this.effectInfo, this.attribute, this);
+      this.formula = new Calculation(this.effectInfo, this.attributeList, this);
+      this.inputs = Array.from(this.formula.getInputs());
     }
   }
 

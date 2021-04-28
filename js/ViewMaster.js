@@ -70,7 +70,7 @@ class ViewMaster {
 
   updateModel(attribute, data) {
     attribute.setValue(data);
-    attribute.removeInputs();
+    // attribute.removeInputs();
   }  
 
 }
