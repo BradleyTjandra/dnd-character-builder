@@ -43,4 +43,8 @@ class Effect {
     return(this._effectInfo);
   }
 
+  remove() {
+    this.attribute.removeInput(this);
+  }
+
 }

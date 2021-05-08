@@ -54,11 +54,16 @@ class Attribute {
   addInput(effect) {
 
     this.inputs.push(effect);
-  
     effect.inputs.forEach((value) => value.listeners.push(this));
-
     this.calculate();
 
+  }
+
+  removeInput(effect) {
+    let idx = this.inputs.indexOf(effect);
+    if (idx == -1) return;
+    this.inputs.splice(idx, 1);
+    this.calculate();
   }
 
 }

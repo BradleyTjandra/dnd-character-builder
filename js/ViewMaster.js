@@ -82,7 +82,7 @@ class ViewMaster {
     if (button) {
 
       if (button.dataset.input == "add-feature") this.addFeature(event);
-      if (button.dataset.input == "del-feature") this.deleteFeature(event);
+      // if (button.dataset.input == "del-feature") this.deleteFeature(event);
 
     }
 
@@ -100,7 +100,8 @@ class ViewMaster {
     let buttonDiv = e.target.closest("div[data-feature=add-feature");
     buttonDiv.before(featureElem);
 
-    buttonDiv.scrollIntoView(false); // false so that the button scrolls into view at button
+    // false so that the button scrolls into view at button
+    buttonDiv.scrollIntoView(false); 
 
     // create an effect for a text description of the feature
     let featureDescriptions = this.controller.attributeList["all-features-descriptions"];
@@ -111,7 +112,7 @@ class ViewMaster {
     let featDescEffect = new Effect(featureDescriptions, blankInfo, this.controller.attributeList, featureElem);
     featureDescriptions.addInput(featDescEffect); 
 
-    // create a listener to update the effect when the text description changes
+    // Listener for feature name changes
     let featureName = featureElem.querySelector("input[data-feature='feature-name']");
     featureName.addEventListener("input", e => {
       let info = featDescEffect.effectInfo;
@@ -119,6 +120,7 @@ class ViewMaster {
       featDescEffect.effectInfo = info;
     });
 
+    // Listener for feature description changes
     let featureDesc = featureElem.querySelector("textarea[data-feature='feature-description']");
     featureDesc.addEventListener("input", e => {
       let info = featDescEffect.effectInfo;
@@ -126,21 +128,29 @@ class ViewMaster {
       featDescEffect.effectInfo = info;
     });
 
+    // Listener for feature being deleted
+    let deleteFeature = featureElem.querySelector("input[data-input='del-feature']");
+    deleteFeature.addEventListener("click", e => {
+      if (featureElem.hidden) return;
+      featureElem.remove();
+      featDescEffect.remove();
+    })
+
 
   }
   
-  deleteFeature(e) {
+  // deleteFeature(e) {
 
-    let featureElem = e.target.closest("div[data-feature=feature-all]");
-    let featureNum = featureElem.dataset.featureNumber;
-    let featureType = featureElem.dataset.featureType;
+  //   let featureElem = e.target.closest("div[data-feature=feature-all]");
+  //   let featureNum = featureElem.dataset.featureNumber;
+  //   let featureType = featureElem.dataset.featureType;
 
-    if (featureElem.hidden) return;
-    featureElem.remove();      
+  //   if (featureElem.hidden) return;
+  //   featureElem.remove();      
 
-    this.controller.delete(featureType, featureNum);
+  //   this.controller.delete(featureType, featureNum);
 
-  }
+  // }
 
   updateModel(attribute, data) {
     attribute.setValue(data);
