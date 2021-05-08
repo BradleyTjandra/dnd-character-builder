@@ -39,8 +39,15 @@ class ViewMaster {
   setupViews() {
 
     this.ViewList = Object.assign(
-      this.setupTotalAbilityScoreViews()
+      this.setupTotalAbilityScoreViews(),
+      new View(
+        document.getElementById("feature-descriptions"), 
+        this.controller, 
+        this.controller.attributeList["all-features-descriptions"],
+        "features")
     )
+
+    document.getElementById("feature-list").onclick = this.onClickFeatureList.bind(this);
 
   }
 
@@ -53,12 +60,12 @@ class ViewMaster {
     for (let ability of this.abilityScores) {
       
       elem = document.getElementById("ability-score-"+ability+"-span");
-      attribute = this.controller.attributeList["total-ability-score-"+ability];
+      attribute = this.controller.attributeList[ability];
       view = new View(elem, this.controller, attribute);
       scores.push(view);
 
       elem = document.getElementById("ability-mod-"+ability+"-span");
-      attribute = this.controller.attributeList["total-ability-mod-"+ability];
+      attribute = this.controller.attributeList[ability+"mod"];
       view = new View(elem, this.controller, attribute, "signed value");
       scores.push(view);
 
@@ -67,10 +74,76 @@ class ViewMaster {
     return(scores);
 
   }
+  
+  onClickFeatureList(event) {
+
+    let button = event.target.closest("input[type=button]");
+    
+    if (button) {
+
+      if (button.dataset.input == "add-feature") this.addFeature(event);
+      if (button.dataset.input == "del-feature") this.deleteFeature(event);
+
+    }
+
+  }
+
+  addFeature(e) {
+
+    let featureElem = document.getElementById("hidden-feature").cloneNode(true);
+    featureElem.hidden = false;
+    featureElem.removeAttribute("id");
+    
+    let parentElem = e.target.closest("div[data-feature=all]");
+    featureElem.dataset.featureType = parentElem.dataset.featureType;
+
+    let buttonDiv = e.target.closest("div[data-feature=add-feature");
+    buttonDiv.before(featureElem);
+
+    buttonDiv.scrollIntoView(false); // false so that the button scrolls into view at button
+
+    // create an effect for a text description of the feature
+    let featureDescriptions = this.controller.attributeList["all-features-descriptions"];
+    let blankInfo = {
+      "name" : "",
+      "description" : ""
+    }
+    let featDescEffect = new Effect(featureDescriptions, blankInfo, this.controller.attributeList, featureElem);
+    featureDescriptions.addInput(featDescEffect); 
+
+    // create a listener to update the effect when the text description changes
+    let featureName = featureElem.querySelector("input[data-feature='feature-name']");
+    featureName.addEventListener("input", e => {
+      let info = featDescEffect.effectInfo;
+      info['name'] = e.target.value;
+      featDescEffect.effectInfo = info;
+    });
+
+    let featureDesc = featureElem.querySelector("textarea[data-feature='feature-description']");
+    featureDesc.addEventListener("input", e => {
+      let info = featDescEffect.effectInfo;
+      info['description'] = e.target.value;
+      featDescEffect.effectInfo = info;
+    });
+
+
+  }
+  
+  deleteFeature(e) {
+
+    let featureElem = e.target.closest("div[data-feature=feature-all]");
+    let featureNum = featureElem.dataset.featureNumber;
+    let featureType = featureElem.dataset.featureType;
+
+    if (featureElem.hidden) return;
+    featureElem.remove();      
+
+    this.controller.delete(featureType, featureNum);
+
+  }
 
   updateModel(attribute, data) {
     attribute.setValue(data);
-    // attribute.removeInputs();
   }  
 
 }

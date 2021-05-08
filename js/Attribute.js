@@ -15,12 +15,16 @@ class Attribute {
 
     // if fixed we don't calculate this, this is set by the user
     if (this.calcType == "calculated") {
-    
-      this.value = 0;
+      this.value = this.inputs.reduce((sum, current) => sum+current.value, 0);
+      // this.value = 0;
 
-      for (let effect of this.inputs) {
-        this.value += effect.value;
-      }
+      // for (let effect of this.inputs) {
+      //   this.value += effect.value;
+      // }
+    } else if (this.calcType == "concat") {
+      this.value = this.inputs.map(item => item.value);
+    } else if (this.calcType == "boolean_or") {
+      this.value = this.inputs.reduce((sum, current) => sum || current.value, false);
     }
 
     this.triggerListeners();
@@ -50,15 +54,8 @@ class Attribute {
   addInput(effect) {
 
     this.inputs.push(effect);
-    try {
-      effect.inputs.forEach((value) => value.listeners.push(this));
-    } catch (e) {
-      // alert(this.name);
-      // alert(effect.inputs.length);
-      // alert(Array.from(effect.inputs));
-      // alert(Array.from(effect.inputs)[0]);
-      throw e;
-    }
+  
+    effect.inputs.forEach((value) => value.listeners.push(this));
 
     this.calculate();
 

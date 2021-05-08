@@ -11,19 +11,20 @@ class Controller {
 
   setupAttributes() {
     this.attributeList = Object.assign(
-      this.createAbilityScoreAttributes("base-ability-score-", "fixed"),
-      this.createAbilityScoreAttributes("total-ability-score-", "calculated"),
-      this.createAbilityScoreAttributes("total-ability-mod-", "calculated")
+      this.createAbilityScoreAttributes(value => "base-ability-score-"+value, "fixed"),
+      this.createAbilityScoreAttributes(value => value, "calculated"),
+      this.createAbilityScoreAttributes(value => value+"mod", "calculated"),
+      {"all-features-descriptions" : new Attribute("all-features-descriptions", "concat")},
     );
 
     this.setupTotalAbilityScoreAttributes();
 
   }
 
-  createAbilityScoreAttributes(prefix, calcType) {
+  createAbilityScoreAttributes(attributeNameTemplate, calcType) {
 
     let abilityScoreAttributes = Object.fromEntries(
-      this.abilityScores.map(value => [prefix+value, new Attribute(prefix+value, calcType)])
+      this.abilityScores.map(value => [attributeNameTemplate(value), new Attribute(attributeNameTemplate(value), calcType)])
     );
 
     return(abilityScoreAttributes);
@@ -33,25 +34,12 @@ class Controller {
   setupTotalAbilityScoreAttributes() {
     
     function pairAbilityScores(value) {
-      let total = this.attributeList[`total-ability-score-${value}`];
+      let total = this.attributeList[`${value}`];
       let effectBaseToTotal = new Effect(total, `{{base-ability-score-${value}}}`, this.attributeList, this, "calculated");
       total.addInput(effectBaseToTotal);
 
-      // constructor(attribute, effectInfo, attributeList, source, effectType = "fixed") {
-      // let calc = new Calculation(
-      //   `{{base-ability-score-${value}}}`, 
-      //   this.attributeList,
-      //   this
-      //   );
-      // total.setInput(calc);
-
-      let mod = this.attributeList[`total-ability-mod-${value}`];
-      let effectMod = new Effect(mod, `({{total-ability-score-${value}}}-10)/2`, this.attributeList, this, "calculated");
-      // let mod_calc = new Calculation(
-      //   `({{total-ability-score-${value}}}-10)/2`,
-      //   this.attributeList,
-      //   this
-      //   );
+      let mod = this.attributeList[`${value}mod`];
+      let effectMod = new Effect(mod, `({{${value}}}-10)/2`, this.attributeList, this, "calculated");
       mod.addInput(effectMod);
 
     }

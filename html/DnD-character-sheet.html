@@ -36,6 +36,7 @@
         </td>
       </tr>
     </table>
+    <div id="feature-descriptions"></div>
     <h2>Base Ability Scores</h2>
     <table id="base-ability-scores">
       <tr>
@@ -66,25 +67,38 @@
       </tr>
     </table>
   </body>
-  <h2>Race</h2>
-  <div id="hidden-feature">
-    <div><span><b>Name: </b></span><input data-feature="name"></div>
-    <div>
-      <div><b>Description: </b></div>
-      <textarea cols="64" data-feature="description"></textarea>
-    </div>
-    <h3>Mechanics</h3>
-    <div id="hidden-mechanic">
-      <div><span><b>Mechanic Name: </b></span><input data-mechanic="name"></div>
-      <div>
-        <div><b>Mechanic Description: </b></div>
-        <textarea cols="64" data-mechanic="description"></textarea>
+  <div id="feature-list">
+    <div data-feature-type="hidden">
+        <div id="hidden-feature" data-feature="feature-all" data-feature-number="1">
+          <div>
+            <b>Feature Name: </b>
+            <input data-feature="feature-name" size=48>
+            <input type="button" value="Delete Feature" data-input="del-feature">
+          <div>
+            <div><b>Feature Description: </b></div>
+            <textarea cols="64" data-feature="feature-description"></textarea>
+          </div>
+          <div><b>Effects</b></div>
+          <div data-feature="effect" data-effect-number="1">
+            <input placeholder="Attribute" data-mechanic="effect-attribute">
+            <input size="64" placeholder="Calculation" data-mechanic="effect-calculation">
+          </div>
+        
+        <div><input type="button" id="race-add-mechanic-button" value="Add Effect"></div>
       </div>
-      <div><b>Effects</b></div>
-      <input placeholder="Attribute" data-mechanic="attribute">
-      <input size="64" placeholder="Calculation" data-mechanic="calculation">
     </div>
-    <div><input type="button" value="Add Mechanic"></div>
+    <h2>Race</h2>
+    <div data-feature-type="race" data-feature="all">
+        <div><span><b>Race Name: </b></span><input data-feature="race-name"></div>
+        <div>
+          <div><b>Description: </b></div>
+          <textarea cols="64" data-feature="race-description"></textarea>
+        </div>
+        <h3>Features</h3>
+      <div data-feature="add-feature">
+        <input type="button" data-input="add-feature" value="Add Feature">
+      </div>
+    </div>
   </div>
 
   <link rel="stylesheet" href="../css/DnD-character-sheet.css">

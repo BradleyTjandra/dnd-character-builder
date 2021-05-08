@@ -6,11 +6,8 @@ class Feature {
     this.name = name;
     this.effects = [];
     this.attributeList = attributeList;
+    this.description = {};
     this.featureType = featureType; // fixed, calculated, list (for spells), etc.
-  }
-
-  setDescription(description) {
-    this.description = description;
   }
 
   addEffect(attributeInfo, effectInfo) {
