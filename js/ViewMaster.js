@@ -30,7 +30,7 @@ class ViewMaster {
 
       let ability = view.dataset.baseAbilityScore;
       let attribute = this.controller.attributeList["base-ability-score-"+ability];
-      this.updateModel(attribute, value);
+      attribute.setValue(value);
 
     });
 
@@ -90,6 +90,7 @@ class ViewMaster {
 
   addFeature(e) {
 
+    // Create new feature div
     let featureElem = document.getElementById("hidden-feature").cloneNode(true);
     featureElem.hidden = false;
     featureElem.removeAttribute("id");
@@ -115,7 +116,7 @@ class ViewMaster {
     // Listener for feature name changes
     let featureName = featureElem.querySelector("input[data-feature='feature-name']");
     featureName.addEventListener("input", e => {
-      let info = featDescEffect.effectInfo;
+      let info = featDescEffect.effectInfo ?? {};
       info['name'] = e.target.value;
       featDescEffect.effectInfo = info;
     });
@@ -123,7 +124,7 @@ class ViewMaster {
     // Listener for feature description changes
     let featureDesc = featureElem.querySelector("textarea[data-feature='feature-description']");
     featureDesc.addEventListener("input", e => {
-      let info = featDescEffect.effectInfo;
+      let info = featDescEffect.effectInfo ?? {};
       info['description'] = e.target.value;
       featDescEffect.effectInfo = info;
     });
@@ -133,9 +134,37 @@ class ViewMaster {
     deleteFeature.addEventListener("click", e => {
       if (featureElem.hidden) return;
       featureElem.remove();
-      featDescEffect.remove();
+      featDescEffect.removeListeningAttributes();
     })
 
+    let effectDiv = featureElem.querySelector("div[data-feature='effect']")
+    this.setupEffectListeners(effectDiv);
+
+
+  }
+
+  setupEffectListeners(div) {
+
+    if (div.data?.feature != "effect") return;
+    
+    let effect = new Effect(this.controller.attributeList, div);
+    // let effect = 
+
+    let effectAttr = div.querySelector("input[data-effect='effect-attribute']");
+    effectAttr.addEventListener("change", e => {
+      
+      let attributeName = e.target.value;
+      
+      if (!(attributeName in this.controller.attributeList)) return;
+
+      if (effect.isSetup & effect.attribute.name == attributeName) return;
+
+      effect.removeListeningAttributes();
+
+      effect.attribute = this.controller.attributeList[e.target.value];
+      // effect.effectInfo = 
+
+    });
 
   }
   

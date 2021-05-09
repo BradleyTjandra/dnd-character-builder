@@ -22,8 +22,10 @@ class View {
       this.elem.textContent = val >= 0 ? "+" + val : val;
     } else if (this.viewType == "features") {
       this.elem.innerHTML = this.linkedAttribute.value.map( item => {
+        alert(item);
+        if (!item) return "";
         return(`<div><b><i>${item["name"]}</i></b> ${item['description']}`);
-      })
+      });
     }
 
   }

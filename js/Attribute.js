@@ -16,11 +16,6 @@ class Attribute {
     // if fixed we don't calculate this, this is set by the user
     if (this.calcType == "calculated") {
       this.value = this.inputs.reduce((sum, current) => sum+current.value, 0);
-      // this.value = 0;
-
-      // for (let effect of this.inputs) {
-      //   this.value += effect.value;
-      // }
     } else if (this.calcType == "concat") {
       this.value = this.inputs.map(item => item.value);
     } else if (this.calcType == "boolean_or") {
@@ -49,12 +44,20 @@ class Attribute {
   triggerListeners() {
     this.listeners.forEach((value) => value.calculate());
     this.linkedViews.forEach((value) => value.update());
+    // alert(JSON.stringify(this.linkedViews.map(item => item.name)));
   }
 
   addInput(effect) {
 
+    // add to inputs (if not already)
+    if (this.inputs.includes(effect)) return;
+
     this.inputs.push(effect);
-    effect.inputs.forEach((value) => value.listeners.push(this));
+
+    // tell all 'upstream' attributes that this attribute is listening to its value
+    effect.inputs.forEach((attr) => attr.listeners.push(this));
+
+    // update value
     this.calculate();
 
   }

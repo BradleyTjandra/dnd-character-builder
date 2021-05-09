@@ -12,8 +12,27 @@ class Calculation {
 
   set formula(formula) {
 
+    this.isValid = true;
     this.parseFormula(formula);
     this.getInputs();
+
+  }
+
+  getValidity() {
+    
+    if (!this.isValid) return false;
+    
+    let validity = true;
+
+    if (this.arg1 instanceof Calculation) {
+      validity = validity & this.arg1.getValidity();
+    }
+
+    if (this.arg2 instanceof Calculation) {
+      validity = validity & this.arg2.getValidity();
+    }
+
+    return(validity);
 
   }
 
@@ -41,8 +60,11 @@ class Calculation {
   }
 
   calculate() {
-    
-    if (this.op == "attribute") {
+
+
+    if (!this.getValidity()) {
+      return undefined;
+    } else if (this.op == "attribute") {
       return this.arg1.value;
     } else if (this.op == "id" && this.arg1.trim() == "") {
       return(0);
@@ -82,6 +104,10 @@ class Calculation {
 
     if (formula == "{{null_op}}") {
       this.op = "null";
+      return;
+    } else if (formula == "") {
+      this.isValid = false;
+      this.op = "invalid";
       return;
     }
 
@@ -131,6 +157,11 @@ class Calculation {
       this.arg2 = new Calculation("{{null_op}}");
     } else if (firstFeatBracketGroupStart == 0 && firstFeatBracketGroupEnd == formula.length-2) {
       this.op = "attribute";
+      let attributeName = formula.slice(2, formula.length - 2);
+      if (!(attributeName in this.attributeList)) {
+        this.isValid = false;
+        return;
+      }
       this.arg1 = this.attributeList[formula.slice(2, formula.length - 2)];
       this.arg2 = new Calculation("{{null_op}}");
     } else if (firstPlusMinus != undefined) {
@@ -146,6 +177,8 @@ class Calculation {
   }
 
   getGraph() {
+
+    if (!this.isValid) return "";
 
     if (this.op == "null") return "";
 

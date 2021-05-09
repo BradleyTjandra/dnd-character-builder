@@ -34,13 +34,17 @@ class Controller {
   setupTotalAbilityScoreAttributes() {
     
     function pairAbilityScores(value) {
-      let total = this.attributeList[`${value}`];
-      let effectBaseToTotal = new Effect(total, `{{base-ability-score-${value}}}`, this.attributeList, this, "calculated");
-      total.addInput(effectBaseToTotal);
+      // let total = this.attributeList[`${value}`];
+      let effectBaseToTotal = new Effect(this.attributeList, this);
+      effectBaseToTotal.setDetails(value, `{{base-ability-score-${value}}}`, "calculated");
+      // let effectBaseToTotal = new Effect(total, `{{base-ability-score-${value}}}`, this.attributeList, this, "calculated");
+      // total.addInput(effectBaseToTotal);
 
-      let mod = this.attributeList[`${value}mod`];
-      let effectMod = new Effect(mod, `({{${value}}}-10)/2`, this.attributeList, this, "calculated");
-      mod.addInput(effectMod);
+      let effectMod = new Effect(this.attributeList, this);
+      effectMod.setDetails(`${value}mod`, `({{${value}}}-10)/2`, "calculated");
+      // let mod = this.attributeList[`${value}mod`];
+      // let effectMod = new Effect(mod, `({{${value}}}-10)/2`, this.attributeList, this, "calculated");
+      // mod.addInput(effectMod);
 
     }
 
@@ -49,32 +53,23 @@ class Controller {
   }
 }
 
+// constructor(attributeList, source) {
+//   this.attributeList = attributeList;
+//   this.source = source;
+//   this.isSetup = false;
+//   this._attribute = {"valid" : false, "data" : undefined};
+//   this._effectInfo = {"valid" : false, "data" : undefined};
+//   this.inputs = [];
+// }
 
+// setDetails(attribute, effectInfo, effectType = "fixed") {
 
+//   this.effectType = effectType; 
+//   this.attribute = attribute;
+//   this.effectInfo = effectInfo;
+  
+//   // fixed, calculated, list (for spells), etc.
 
-
-  // setViewListeners() {
-
-  //   let view = this.view;
-
-  //   view.onBaseAbilityScoreUpdate = this.updateBaseAbilityScore.bind(this);
-
-  // }
-
-  // updateBaseAbilityScore(e) {
-  //   let input = e.target.closest("input");
-
-  //   if (!input) return;
-
-  //   if (!input.hasAttribute.contains("data-base-ability-score")) return;
-
-  //   // TODO: if input value not a valid number then ignore
-
-  //   let ability = input.data.baseAbilityScore;
-
-  //   this.characterSheetModel["baseAbilityScore"][ability] = input.value;
-
-  //   this.view.update
-
-  // }
-
+//   // this.setup();
+//   // this.refreshEffectInfoValidity();
+// }
