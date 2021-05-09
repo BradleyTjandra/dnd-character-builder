@@ -61,9 +61,9 @@ class Effect {
 
   set effectInfo(newInfo) {
 
-    let oldInfo = this.effectInfo;
+    let oldInfo = Object.assign({}, this.effectInfo);
 
-    if (this.effectInfo == newInfo) return;
+    if (oldInfo == newInfo) return;
 
     this._effectInfo['data'] = newInfo;
 
@@ -71,12 +71,6 @@ class Effect {
       this.formula = new Calculation(newInfo, this.attributeList, this);
       this.inputs = Array.from(this.formula.getInputs());
       this._effectInfo["valid"] = this.formula.getValidity();
-      // if (oldInfo) {
-      //   oldInfo.inputs.forEach((attr) => {
-      //     let idx = attr.inputs.indexOf(oldInfo);
-      //     attr.inputs.splice(idx, 1);
-      //   });
-      // }
     } else {
       this._effectInfo["valid"] = true;
     }

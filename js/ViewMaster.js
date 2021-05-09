@@ -105,13 +105,11 @@ class ViewMaster {
     buttonDiv.scrollIntoView(false); 
 
     // create an effect for a text description of the feature
-    let featureDescriptions = this.controller.attributeList["all-features-descriptions"];
-    let blankInfo = {
-      "name" : "",
-      "description" : ""
-    }
-    let featDescEffect = new Effect(featureDescriptions, blankInfo, this.controller.attributeList, featureElem);
-    featureDescriptions.addInput(featDescEffect); 
+    let featureDescriptions = this.controller.attributeList["all-features-descriptions"];    
+    let featDescEffect = new Effect(this.controller.attributeList, featureElem);
+    // let featDescEffect = new Effect(featureDescriptions, blankInfo, this.controller.attributeList, featureElem);
+    featDescEffect.setDetails(featureDescriptions, undefined)
+    // featureDescriptions.addInput(featDescEffect); 
 
     // Listener for feature name changes
     let featureName = featureElem.querySelector("input[data-feature='feature-name']");
@@ -168,19 +166,6 @@ class ViewMaster {
 
   }
   
-  // deleteFeature(e) {
-
-  //   let featureElem = e.target.closest("div[data-feature=feature-all]");
-  //   let featureNum = featureElem.dataset.featureNumber;
-  //   let featureType = featureElem.dataset.featureType;
-
-  //   if (featureElem.hidden) return;
-  //   featureElem.remove();      
-
-  //   this.controller.delete(featureType, featureNum);
-
-  // }
-
   updateModel(attribute, data) {
     attribute.setValue(data);
   }  
