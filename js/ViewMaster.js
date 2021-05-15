@@ -7,7 +7,7 @@ class ViewMaster {
   constructor(controller) {
 
     this.controller = controller;
-    this.ViewList = [];
+    this.views = {};
 
     this.setupViews();
     this.setupBaseAbilityScores();
@@ -29,23 +29,41 @@ class ViewMaster {
       if (isNaN(value)) return;
 
       let ability = view.dataset.baseAbilityScore;
-      let attribute = this.controller.attributeList["base-ability-score-"+ability];
+      let attribute = this.controller.attributes.get("base-ability-score-"+ability);
       attribute.setValue(value);
 
     });
+
+    let inputElem, attribute;
+    for (let ability of this.controller.abilityScores) { 
+      inputElem = document.querySelector(`input[data-base-ability-score='${ability}']`);
+      attribute = this.controller.attributes.get("base-ability-score-"+ability);
+      this.add(inputElem, attribute, "input-text");
+    }
+
+  }
+
+  add(elem, attribute, viewType) {
+
+    let view = new View(elem, attribute, viewType);
+    this.views[attribute.name] = view;
+    return(view);
 
   }
 
   setupViews() {
 
-    this.ViewList = Object.assign(
-      this.setupTotalAbilityScoreViews(),
-      new View(
+    this.setupTotalAbilityScoreViews();
+
+    this.add(
         document.getElementById("feature-descriptions"), 
-        this.controller, 
-        this.controller.attributeList["all-features-descriptions"],
-        "features")
-    )
+        this.controller.attributes.get("all-features-descriptions"),
+        "features");
+
+    this.add(
+      document.getElementById("speed"),
+      this.controller.attributes.get("speed")
+    );
 
     document.getElementById("feature-list").onclick = this.onClickFeatureList.bind(this);
 
@@ -60,13 +78,13 @@ class ViewMaster {
     for (let ability of this.abilityScores) {
       
       elem = document.getElementById("ability-score-"+ability+"-span");
-      attribute = this.controller.attributeList[ability];
-      view = new View(elem, this.controller, attribute);
+      attribute = this.controller.attributes.get(ability);
+      view = this.add(elem, attribute, "value");
       scores.push(view);
 
       elem = document.getElementById("ability-mod-"+ability+"-span");
-      attribute = this.controller.attributeList[ability+"mod"];
-      view = new View(elem, this.controller, attribute, "signed value");
+      attribute = this.controller.attributes.get(ability+"mod");
+      view = this.add(elem, attribute, "signed value");
       scores.push(view);
 
     }
@@ -82,6 +100,7 @@ class ViewMaster {
     if (button) {
 
       if (button.dataset.input == "add-feature") this.addFeature(event);
+      if (button.dataset.input == "add-effect") this.addEffect(event);
       // if (button.dataset.input == "del-feature") this.deleteFeature(event);
 
     }
@@ -105,11 +124,8 @@ class ViewMaster {
     buttonDiv.scrollIntoView(false); 
 
     // create an effect for a text description of the feature
-    let featureDescriptions = this.controller.attributeList["all-features-descriptions"];    
-    let featDescEffect = new Effect(this.controller.attributeList, featureElem);
-    // let featDescEffect = new Effect(featureDescriptions, blankInfo, this.controller.attributeList, featureElem);
-    featDescEffect.setDetails(featureDescriptions, undefined)
-    // featureDescriptions.addInput(featDescEffect); 
+    let featureDescriptions = this.controller.attributes.get("all-features-descriptions");
+    let featDescEffect = this.controller.effects.add(featureDescriptions, undefined, featureElem);
 
     // Listener for feature name changes
     let featureName = featureElem.querySelector("input[data-feature='feature-name']");
@@ -132,7 +148,7 @@ class ViewMaster {
     deleteFeature.addEventListener("click", e => {
       if (featureElem.hidden) return;
       featureElem.remove();
-      featDescEffect.removeListeningAttributes();
+      this.controller.effects.removeEffect(featDescEffect);
     })
 
     let effectDiv = featureElem.querySelector("div[data-feature='effect']")
@@ -141,33 +157,48 @@ class ViewMaster {
 
   }
 
+  addEffect(e) {
+
+    let effectElem = document.getElementById("hidden-effect").cloneNode(true);
+    effectElem.hidden = false;
+    effectElem.removeAttribute("id");
+
+    let addEffectDiv = e.target.closest("input[data-input='add-effect']").parentNode;
+    addEffectDiv.before(effectElem);
+
+    this.setupEffectListeners(effectElem);
+
+
+  }
+
   setupEffectListeners(div) {
 
-    if (div.data?.feature != "effect") return;
+    if (div.dataset?.feature != "effect") return;
     
-    let effect = new Effect(this.controller.attributeList, div);
-    // let effect = 
+    let effect = this.controller.effects.add(undefined, undefined, div, "calculated");
 
     let effectAttr = div.querySelector("input[data-effect='effect-attribute']");
-    effectAttr.addEventListener("change", e => {
-      
-      let attributeName = e.target.value;
-      
-      if (!(attributeName in this.controller.attributeList)) return;
+    effectAttr.addEventListener("input", e => effect.attribute = e.target.value);
 
-      if (effect.isSetup & effect.attribute.name == attributeName) return;
+    let effectCalc = div.querySelector("input[data-effect='effect-calculation']");
+    effectCalc.addEventListener("input", e => effect.effectInfo = e.target.value);
 
-      effect.removeListeningAttributes();
-
-      effect.attribute = this.controller.attributeList[e.target.value];
-      // effect.effectInfo = 
-
-    });
+    let effectDel = div.querySelector("input[data-input='del-effect']");
+    effectDel.addEventListener("click", e => {
+      div.remove();
+      this.controller.effects.removeEffect(effect);
+    })
 
   }
   
   updateModel(attribute, data) {
     attribute.setValue(data);
   }  
+
+  refreshViews() {
+
+    Object.values(this.views).forEach(view => view.update());
+
+  }
 
 }

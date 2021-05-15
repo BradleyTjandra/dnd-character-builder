@@ -2,7 +2,7 @@
 
 class View {
 
-  constructor(elem, controller, attribute, viewType = "value") {
+  constructor(elem, attribute, viewType = "value") {
 
     // this.controller = controller;
     this.linkedAttribute = attribute;
@@ -21,11 +21,12 @@ class View {
       let val = this.linkedAttribute.value;
       this.elem.textContent = val >= 0 ? "+" + val : val;
     } else if (this.viewType == "features") {
-      this.elem.innerHTML = this.linkedAttribute.value.map( item => {
-        // alert(item);
-        if (!item) return "";
-        return(`<div><b><i>${item["name"] ?? "" }</i></b> ${item['description'] ?? "" }`);
-      });
+      this.elem.innerHTML = this.linkedAttribute.value.reduce( (accumulator, item) => {
+        if (!item) return accumulator;
+        return(`${accumulator}<div><b><i>${item["name"] ?? "" }</i></b> ${item['description'] ?? "" }</div>`);
+      }, "");
+    } else if (this.viewType == "input-text") {
+      this.elem.value = this.linkedAttribute.value;
     }
 
   }

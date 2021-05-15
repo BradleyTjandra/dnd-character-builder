@@ -5,71 +5,56 @@ class Controller {
   abilityScores = ["str", "dex", "con", "wis", "cha", "int"];
 
   constructor() {
-    this.setupAttributes();
-    // this.setupView();
+
+    this.attributes = new Attributes();
+    // this.loadCharacterSheet();
+    this.attributes.createAttributesList();
+    
+    this.effects = new Effects(this.attributes);
+    this.setupEffectsBetweenAttributes();
+
   }
 
-  setupAttributes() {
-    this.attributeList = Object.assign(
-      this.createAbilityScoreAttributes(value => "base-ability-score-"+value, "fixed"),
-      this.createAbilityScoreAttributes(value => value, "calculated"),
-      this.createAbilityScoreAttributes(value => value+"mod", "calculated"),
-      {"all-features-descriptions" : new Attribute("all-features-descriptions", "concat")},
-    );
+  loadCharacterSheet() {
+
+    let characterSheetData = JSON.parse(localStorage.getItem("characterSheet"));
+
+    if (characterSheetData) {
+
+      this.attributes.loadAttributes(characterSheetData?.attributes);
+
+    }
+
+  }
+
+  setupEffectsBetweenAttributes() {
 
     this.setupTotalAbilityScoreAttributes();
 
-  }
-
-  createAbilityScoreAttributes(attributeNameTemplate, calcType) {
-
-    let abilityScoreAttributes = Object.fromEntries(
-      this.abilityScores.map(value => [attributeNameTemplate(value), new Attribute(attributeNameTemplate(value), calcType)])
-    );
-
-    return(abilityScoreAttributes);
-
-  }
+  }  
 
   setupTotalAbilityScoreAttributes() {
     
     function pairAbilityScores(value) {
-      // let total = this.attributeList[`${value}`];
-      let effectBaseToTotal = new Effect(this.attributeList, this);
-      effectBaseToTotal.setDetails(value, `{{base-ability-score-${value}}}`, "calculated");
-      // let effectBaseToTotal = new Effect(total, `{{base-ability-score-${value}}}`, this.attributeList, this, "calculated");
-      // total.addInput(effectBaseToTotal);
 
-      let effectMod = new Effect(this.attributeList, this);
-      effectMod.setDetails(`${value}mod`, `({{${value}}}-10)/2`, "calculated");
-      // let mod = this.attributeList[`${value}mod`];
-      // let effectMod = new Effect(mod, `({{${value}}}-10)/2`, this.attributeList, this, "calculated");
-      // mod.addInput(effectMod);
+      this.effects.add(value, `{{base-ability-score-${value}}}`, this, "calculated");
+      this.effects.add(`${value}mod`, `({{${value}}}-10)/2`, this, "calculated");
 
     }
 
     this.abilityScores.forEach(pairAbilityScores.bind(this));
 
   }
-}
 
-// constructor(attributeList, source) {
-//   this.attributeList = attributeList;
-//   this.source = source;
-//   this.isSetup = false;
-//   this._attribute = {"valid" : false, "data" : undefined};
-//   this._effectInfo = {"valid" : false, "data" : undefined};
-//   this.inputs = [];
-// }
+  saveInfo() {
 
-// setDetails(attribute, effectInfo, effectType = "fixed") {
+    let saveInfo = {
+      "attributes" : this.attributes.getSaveInfo(),
+      "effects" : this.effects.getSaveInfo()
+    };
+    localStorage.characterSheet = JSON.stringify(saveInfo);
+  }
 
-//   this.effectType = effectType; 
-//   this.attribute = attribute;
-//   this.effectInfo = effectInfo;
+
   
-//   // fixed, calculated, list (for spells), etc.
-
-//   // this.setup();
-//   // this.refreshEffectInfoValidity();
-// }
+}

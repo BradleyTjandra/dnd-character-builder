@@ -7,7 +7,7 @@
     <h2>CHARACTER NAME Sense Amid Madness, Wisdom Admist Folly</h2>
     <div><b>Armor Class</b> 12</div>
     <div><b>Hit Points</b> 29 3d8</div>
-    <div><b>Speed</b> 25</div>
+    <div><b>Speed</b> <span id="speed">0</span></div>
     <table>
       <tr>
         <td class="ability-score-td"><b>STR</b> 
@@ -79,22 +79,22 @@
             <textarea cols="64" data-feature="feature-description"></textarea>
           </div>
           <div><b>Effects</b></div>
-          <div data-feature="effect" data-effect-number="1">
+          <div data-feature="effect" id="hidden-effect">
             <input placeholder="Attribute" data-effect="effect-attribute">
-            <input size="64" placeholder="Calculation" data-effect="effect-calculation">
+            <input size="52" placeholder="Calculation" data-effect="effect-calculation">
+            <input type="button" value="Delete" data-input="del-effect">
           </div>
-        
-        <div><input type="button" id="race-add-mechanic-button" value="Add Effect"></div>
+        <div><input type="button" id="race-add-mechanic-button" value="Add Effect" data-input='add-effect'></div>
       </div>
     </div>
     <h2>Race</h2>
     <div data-feature-type="race" data-feature="all">
-        <div><span><b>Race Name: </b></span><input data-feature="race-name"></div>
-        <div>
+        <div hidden><span><b>Race Name: </b></span><input data-feature="race-name"></div>
+        <div hidden>
           <div><b>Description: </b></div>
           <textarea cols="64" data-feature="race-description"></textarea>
         </div>
-        <h3>Features</h3>
+        <h3 hidden>Features</h3>
       <div data-feature="add-feature">
         <input type="button" data-input="add-feature" value="Add Feature">
       </div>
@@ -106,7 +106,9 @@
   
   <script src="../js/Calculation.js"></script>
   <script src="../js/Effect.js"></script>
+  <script src="../js/Effects.js"></script>
   <script src="../js/Attribute.js"></script>
+  <script src="../js/Attributes.js"></script>
   <script src="../js/Controller.js"></script>
   <script src="../js/View.js"></script>
   <script src="../js/ViewMaster.js"></script>

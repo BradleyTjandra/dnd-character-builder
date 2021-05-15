@@ -2,25 +2,23 @@
 
 class Effect {
 
-  constructor(attributeList, source) {
-    this.attributeList = attributeList;
+  constructor(attributes, source) {
+    this.attributes = attributes;
     this.source = source;
     this.isSetup = false;
     this._attribute = {"valid" : false, "data" : undefined};
     this._effectInfo = {"valid" : false, "data" : undefined};
     this.inputs = [];
+    this.name = undefined;
   }
 
-  setDetails(attribute, effectInfo, effectType = "fixed") {
+  setDetails(name, attribute, effectInfo, effectType = "fixed") {
 
+    this.name = name;
     this.effectType = effectType; 
     this.attribute = attribute;
-    this.effectInfo = effectInfo;
-    
     // fixed, calculated, list (for spells), etc.
-
-    // this.setup();
-    // this.refreshEffectInfoValidity();
+    this.effectInfo = effectInfo;
   }
 
   refreshEffectInfoValidity() {
@@ -32,20 +30,6 @@ class Effect {
     }
 
   }
-  
-  // constructor(attribute, effectInfo, attributeList, source, effectType = "fixed") {
-  //   // this.name = name;
-  //   this.attribute = attribute;
-  //   this._effectInfo = {
-  //     "valid" : undefined,
-  //     "info" : effectInfo
-  //   }
-  //   this.attributeList = attributeList;
-  //   this.source = source;
-  //   this.effectType = effectType; // fixed, calculated, list (for spells), etc.
-  //   this.inputs = [];
-  //   this.setup();
-  // }
 
   get value() {
 
@@ -61,24 +45,33 @@ class Effect {
 
   set effectInfo(newInfo) {
 
+    if (!newInfo) return;
+
+    // update effect info
     let oldInfo = Object.assign({}, this.effectInfo);
-
     if (oldInfo == newInfo) return;
-
     this._effectInfo['data'] = newInfo;
 
+    // recreate the supporting information
     if (this.effectType == "calculated") {
-      this.formula = new Calculation(newInfo, this.attributeList, this);
+
+      this.formula = new Calculation(newInfo, this.attributes, this);
       this.inputs = Array.from(this.formula.getInputs());
       this._effectInfo["valid"] = this.formula.getValidity();
+
     } else {
+
       this._effectInfo["valid"] = true;
+
     }
 
     this.isSetup = (this._effectInfo["valid"] && this._attribute["valid"]);
+
     if (this.isSetup) {
-      this.inputs.forEach((attr) => attr.listeners.push(this.attribute));
+
+      this.inputs.forEach((attr) => attr.listeners.push(this));
       this.attribute.calculate();
+
     }
 
   }
@@ -89,22 +82,25 @@ class Effect {
 
   set attribute(newAttribute) {
 
+    if (!newAttribute) return;
+
     if (typeof newAttribute === "string") {
       
-      if (!(newAttribute in this.attributeList)) {
-        this.removeListeningAttributes();
+      if (!this.attributes.contains(newAttribute)) {
+        this.removeLinks();
+        // alert(this.attribute);
         this._attribute["valid"] = false;
         this._attribute["data"] = undefined;
         return;
       }
 
-      newAttribute = this.attributeList[newAttribute];
+      newAttribute = this.attributes.get(newAttribute);
     }
 
 
     // if (newAttribute.name == this.attribute?.name) return;
 
-    this.removeListeningAttributes();
+    this.removeLinks();
     this._attribute["data"] = newAttribute;
     this._attribute["valid"] = true;
 
@@ -117,9 +113,40 @@ class Effect {
     return(this._attribute['data']);
   }
 
-  removeListeningAttributes() {
+  removeLinks(attribute) {
+
     if (!this.isSetup) return;
-    this.attribute.removeInput(this);
+
+    alert(attribute?.name);
+    alert(this.attribute.name);
+
+    if (!attribute) attribute = this.attribute;
+
+    attribute.removeInput(this);
+    attribute.removeDependent(this);
+  }
+
+  update() {
+    this.attribute.calculate();
+  }
+
+  getSaveInfo() {
+
+    let toSave = {
+      [this.name] : {
+         
+        "name" : this.name,
+        "attribute" : this.attribute.name,
+        "effectInfo" : this.effectInfo,
+        // "source" : this.source?.name ?? this.source
+        "effectType" : this.effectType,
+        
+      }
+    };
+
+
+    return(toSave);
+
   }
 
 }

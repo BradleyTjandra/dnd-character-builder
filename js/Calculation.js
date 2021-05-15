@@ -2,8 +2,8 @@
 
 class Calculation {
   
-  constructor(formula, attributeList, source) {
-    this.attributeList = attributeList;
+  constructor(formula, attributes, source) {
+    this.attributes = attributes;
     this.formula = formula.trim();
     this.inputs = [];
     this.getInputs();
@@ -91,8 +91,8 @@ class Calculation {
   splitAt(string, index, length) {
     return ([
       string.substr(index, length),
-      new Calculation(string.substr(0, index), this.attributeList, this),
-      new Calculation(string.substring(index + length), this.attributeList, this)
+      new Calculation(string.substr(0, index), this.attributes, this),
+      new Calculation(string.substring(index + length), this.attributes, this)
     ]);
   }
 
@@ -153,16 +153,16 @@ class Calculation {
 
     if (firstBracketGroupStart == 0 && firstBracketGroupEnd == formula.length-1) {
       this.op = "enbracket";
-      this.arg1 = new Calculation(formula.slice(1, formula.length - 1), this.attributeList, this);
+      this.arg1 = new Calculation(formula.slice(1, formula.length - 1), this.attributes, this);
       this.arg2 = new Calculation("{{null_op}}");
     } else if (firstFeatBracketGroupStart == 0 && firstFeatBracketGroupEnd == formula.length-2) {
       this.op = "attribute";
       let attributeName = formula.slice(2, formula.length - 2);
-      if (!(attributeName in this.attributeList)) {
+      if (!this.attributes.contains(attributeName)) {
         this.isValid = false;
         return;
       }
-      this.arg1 = this.attributeList[formula.slice(2, formula.length - 2)];
+      this.arg1 = this.attributes.get(formula.slice(2, formula.length - 2));
       this.arg2 = new Calculation("{{null_op}}");
     } else if (firstPlusMinus != undefined) {
       [this.op, this.arg1, this.arg2] = this.splitAt(formula, firstPlusMinus, 1);
