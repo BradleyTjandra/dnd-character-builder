@@ -7,23 +7,17 @@ class Controller {
   constructor() {
 
     this.attributes = new Attributes();
-    // this.loadCharacterSheet();
+    this.attributes.loadAttributes();
     this.attributes.createAttributesList();
     
     this.effects = new Effects(this.attributes);
+    this.effects.loadSaveInfo();
     this.setupEffectsBetweenAttributes();
 
-  }
-
-  loadCharacterSheet() {
-
-    let characterSheetData = JSON.parse(localStorage.getItem("characterSheet"));
-
-    if (characterSheetData) {
-
-      this.attributes.loadAttributes(characterSheetData?.attributes);
-
-    }
+    this.view = new ViewMaster(this);
+    this.view.setup();
+    this.view.loadSaveInfo();
+    this.view.refreshViews();
 
   }
 
@@ -48,11 +42,16 @@ class Controller {
 
   saveInfo() {
 
+    if (!this.attributes) alert("noo!");
+
     let saveInfo = {
       "attributes" : this.attributes.getSaveInfo(),
-      "effects" : this.effects.getSaveInfo()
+      "effects" : this.effects.getSaveInfo(),
+      "featuresTree" : this.view.effectTree.getTree(),
     };
     localStorage.characterSheet = JSON.stringify(saveInfo);
+    return(saveInfo);
+
   }
 
 

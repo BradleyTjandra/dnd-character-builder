@@ -6,17 +6,9 @@ class Effects {
 
     this.attributes = attributes;
     this.effectsList = {};
-    // this.setupBaseEffects();
 
   }
 
-  // setupBaseEffects() {
-
-  //   let raceEffect = new Effect(this.attributes);
-  //   raceEffect.name = "race";
-  //   this.effectsList = Object.assign(this.effectsList, {"race" : raceEffect});
-
-  // }
 
   get(name) {
 
@@ -31,10 +23,6 @@ class Effects {
     let effect = new Effect(this.attributes, source);
     effect.setDetails(name, attribute, effectInfo, effectType);
 
-    // let parent = (source in this.effectsList) ? this.effectsList[source].source : source;
-    // let sourceNode = new EffectTreeNode(name, parent);
-    // effect.source = node;
-
     this.effectsList[name] = effect;
 
     return(effect);
@@ -42,7 +30,6 @@ class Effects {
   }
 
   removeEffect(effect) {
-
 
     effect.removeLinks();
     delete this.effectsList[effect.name];
@@ -59,14 +46,39 @@ class Effects {
 
   getSaveInfo() {
 
-    let listOfEffects = Object.values(this.effectsList);
+    let effects = Object.values(this.effectsList);
+    let userDefinedEffects = effects.filter( eff => eff.source == "user" );
 
-    let saveInfo = listOfEffects.reduce( 
+    let saveInfo = userDefinedEffects.reduce( 
       (o, effect) => Object.assign(o, effect.getSaveInfo() ), {} 
     );
 
     return(saveInfo);
     
+  }
+
+  loadSaveInfo() {
+
+    let characterSheetData = JSON.parse(localStorage.getItem("characterSheet"));
+
+    if (!characterSheetData) return;
+
+    let effects = Object.values(characterSheetData?.effects);
+
+    if (!effects) return;
+
+    for (let effectData of effects) {
+
+      let effect = new Effect(this.attributes, "user");
+      effect.setDetails(effectData.name, 
+        effectData.attribute, 
+        effectData.effectInfo, 
+        effectData.effectType
+        );
+      this.effectsList[effectData.name] = effect;
+
+    }
+
   }
 
 }

@@ -43,10 +43,6 @@ class Effect {
 
   }
 
-  // setSource(parent) {
-
-  // }
-
   set effectInfo(newInfo) {
 
     if (!newInfo) return;
@@ -59,7 +55,13 @@ class Effect {
     // recreate the supporting information
     if (this.effectType == "calculated") {
 
-      this.formula = new Calculation(newInfo, this.attributes, this);
+      let formulaText;
+      if (newInfo[0] == "+" || newInfo[0] == "-")  {
+        formulaText = "0" + newInfo;
+      } else {
+        formulaText = newInfo;
+      }
+      this.formula = new Calculation(formulaText, this.attributes, this);
       this.inputs = Array.from(this.formula.getInputs());
       this._effectInfo["valid"] = this.formula.getValidity();
 
@@ -95,6 +97,7 @@ class Effect {
         // alert(this.attribute);
         this._attribute["valid"] = false;
         this._attribute["data"] = undefined;
+        this.isSetup = false;
         return;
       }
 
@@ -121,13 +124,14 @@ class Effect {
 
     if (!this.isSetup) return;
 
-    alert(attribute?.name);
-    alert(this.attribute.name);
+    // alert(attribute?.name);
+    // alert(this.attribute.name);
 
     if (!attribute) attribute = this.attribute;
 
     attribute.removeInput(this);
     attribute.removeDependent(this);
+
   }
 
   update() {
@@ -135,6 +139,8 @@ class Effect {
   }
 
   getSaveInfo() {
+
+    if (!this.isSetup) return {};
 
     let toSave = {
       [this.name] : {

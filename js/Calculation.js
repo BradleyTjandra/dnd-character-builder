@@ -101,6 +101,7 @@ class Calculation {
     this.op = undefined;
     this.arg1 = undefined;
     this.arg2 = undefined;
+    this.arg3 = undefined;
 
     if (formula == "{{null_op}}") {
       this.op = "null";
@@ -111,10 +112,16 @@ class Calculation {
       return;
     }
 
-    let bracketLevel = 0;
+    let bracketStack = [];
+    let ifGroupStack = [];
+    let bracketLevel= 0;
+    let currentBracketLevelOpening = 0;
     let attributeBracketLevel = 0;
+    let ifGroupLevel = 0;
+    let currentIfGroupOpening = 0;
     let firstMultDiv, firstPlusMinus, firstBracketGroupStart, firstBracketGroupEnd,
-    firstFeatBracketGroupStart, firstFeatBracketGroupEnd;
+    firstFeatBracketGroupStart, firstFeatBracketGroupEnd,
+    firstIfGroupStart, firstIfGroupEnd;
 
     for (let i = 0; i < formula.length; i++) {
 
@@ -124,6 +131,7 @@ class Calculation {
       if (this.nextCharCompare(substr, "(")) {
         bracketLevel++;
         firstBracketGroupStart = firstBracketGroupStart ?? i;
+        currentBracketLevelOpening = i;
       } else if (this.nextCharCompare(substr, ")")) {
         bracketLevel--;
         if (bracketLevel == 0) firstBracketGroupEnd = firstBracketGroupEnd ?? i;
@@ -135,12 +143,22 @@ class Calculation {
       if (this.nextCharCompare(substr, "{{")) {
         attributeBracketLevel++;
         firstFeatBracketGroupStart = firstFeatBracketGroupStart ?? i;
+        currentIfGroupOpening = 0;
       } else if (this.nextCharCompare(substr, "}}")) {
         attributeBracketLevel--;
         firstFeatBracketGroupEnd = firstFeatBracketGroupEnd ?? i;
       }
 
       if (attributeBracketLevel > 0) continue;
+
+      // If statements
+      if (this.nextCharCompare(substr.toLowerCase(), "if(")) {
+        ifGroupLevel++;
+        firstIfGroupStart = firstIfGroupStart ?? i;
+      } else if (this.nextCharCompare(substr, ")")) {
+        ifGroupLevel--;
+        firstIfGroupEnd = firstIfGroupEnd ?? i;
+      }
 
       // Multiplication
       if (this.nextCharCompare(substr, "*") || this.nextCharCompare(substr, "/")) {

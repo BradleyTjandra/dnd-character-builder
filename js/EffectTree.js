@@ -5,27 +5,30 @@ class EffectTree {
   constructor() {
 
     this.nodes = {
-      "stem" : this.newNode("stem"),
+      "stem" : this.newNode("stem", "stem"),
     };
 
   }
 
-  newNode(effect) {
+  newNode(effect, type) {
 
     return({
       "effect" : effect,
       "parent" : undefined,
-      "children" : [] 
+      "children" : [],
+      "type" : type
     });
 
   }
 
-  addNode(parent, effect) {
+  addNode(parent, effect, type) {
 
-    let node = this.newNode(effect);
+    let node = this.newNode(effect, type);
 
     let parentNode = this.nodes[parent];
     node.parent = parentNode;
+
+    if (!parentNode) alert(parent);
 
     parentNode.children.push(node);
 
@@ -35,14 +38,13 @@ class EffectTree {
 
   removeNode(effect) {
 
+    alert(effect);
     let node = this.nodes[effect];
     let idx = node.parent.children.findIndex(node => node.effect == effect);
     node.parent.children.splice(idx, 1);
 
-    for (let child in node.children) {
-      this.removeNode(child.name);
-    }
-
+    node.children.forEach( child => this.removeNode(child.effect) );
+    
     delete this.nodes[effect];
     
   }
@@ -55,8 +57,9 @@ class EffectTree {
     }
     let node = this.nodes[effect];
     let arr = node.children.map(child => this.getSubtree(child.effect));
-    let result = Object.assign({}, ...arr);
-    return({[effect] : result});
+    let nodeInfo = [node.effect, node.type];
+    let nodeChildren = Object.assign({}, ...arr);
+    return({[[nodeInfo]] : nodeChildren});
 
   }
 

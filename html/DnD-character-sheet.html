@@ -36,6 +36,11 @@
         </td>
       </tr>
     </table>
+    <div><b>Saving Throws</b> <span id="saving-throws"></span></div>
+    <div><b>Skills</b> <span id="skills"></span></div>
+    <div><b>Senses</b> <span id="senses"></span></div>
+    <div><b>Languages</b> <span id="languages"></span></div>
+    <h2>Features</h2>
     <div id="feature-descriptions"></div>
     <h2>Base Ability Scores</h2>
     <table id="base-ability-scores">
@@ -68,21 +73,44 @@
     </table>
   </body>
   <div id="feature-list">
-    <h2>Race <input data-feature="race-name" placeholder="Race Name"></h2>
-    <div data-feature-type="race" data-feature="all">
-        <div hidden>
-          <div><b>Description: </b></div>
-          <textarea cols="64" data-feature="race-description"></textarea>
+    <div data-feature-type="hidden">
+      <div id="hidden-feature" data-feature="feature-all" data-effect-id="" hidden>
+        <div>
+          <b>Feature Name: </b>
+          <input data-feature="feature-name" size=48>
+          <input type="button" value="Delete Feature" data-input="del-feature">
         </div>
-        <h3 hidden>Features</h3>
-      <div data-feature="add-feature">
-        <input type="button" data-input="add-feature" value="Add Feature">
+        <div>
+          <div><b>Feature Description: </b></div>
+          <textarea cols="64" data-feature="feature-description"></textarea>
+        </div>
+        <div data-feature="effect-all"><b>Effects</b>
+          <!-- <div data-feature="effect" id="hidden-effect">
+            <input placeholder="Attribute" data-effect="effect-attribute">
+            <input size="52" placeholder="Calculation" data-effect="effect-calculation">
+            <input type="button" value="Delete" data-input="del-effect">
+          </div> -->
+          <div><input type="button" id="race-add-mechanic-button" value="Add Effect" data-input='add-effect'></div>
+        </div>
       </div>
     </div>
+    <div data-feature="effect" id="hidden-effect" hidden>
+      <input placeholder="Attribute" data-effect="effect-attribute">
+      <input size="52" placeholder="Calculation" data-effect="effect-calculation">
+      <input type="button" value="Delete" data-input="del-effect">
+    </div>
+    <h2>Race <input data-feature="race-name" placeholder="Race Name"></h2>
+    <!-- <div data-feature-type="race", data-feature="all-race"> -->
+      <div data-feature-type="race" data-feature="all-feature">
+          <h3 hidden>Features</h3>
+          <div data-feature="add-feature">
+          <input type="button" data-input="add-feature" value="Add Feature">
+        </div>
+      </div>
+    <!-- </div> -->
   </div>
 
   <link rel="stylesheet" href="../css/DnD-character-sheet.css">
-
   
   <script src="../js/Calculation.js"></script>
   <script src="../js/Effect.js"></script>
@@ -90,9 +118,9 @@
   <script src="../js/Effects.js"></script>
   <script src="../js/Attribute.js"></script>
   <script src="../js/Attributes.js"></script>
-  <script src="../js/Controller.js"></script>
   <script src="../js/View.js"></script>
   <script src="../js/ViewMaster.js"></script>
+  <script src="../js/Controller.js"></script>
   <script src="../js/Main.js"></script>
   <!-- <script src="../js/test.js"></script> -->
 
