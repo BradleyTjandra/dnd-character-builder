@@ -43,6 +43,10 @@ class Effect {
 
   }
 
+  // setSource(parent) {
+
+  // }
+
   set effectInfo(newInfo) {
 
     if (!newInfo) return;

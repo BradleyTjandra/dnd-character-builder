@@ -68,28 +68,8 @@
     </table>
   </body>
   <div id="feature-list">
-    <div data-feature-type="hidden">
-        <div id="hidden-feature" data-feature="feature-all" data-feature-number="1" hidden>
-          <div>
-            <b>Feature Name: </b>
-            <input data-feature="feature-name" size=48>
-            <input type="button" value="Delete Feature" data-input="del-feature">
-          <div>
-            <div><b>Feature Description: </b></div>
-            <textarea cols="64" data-feature="feature-description"></textarea>
-          </div>
-          <div><b>Effects</b></div>
-          <div data-feature="effect" id="hidden-effect">
-            <input placeholder="Attribute" data-effect="effect-attribute">
-            <input size="52" placeholder="Calculation" data-effect="effect-calculation">
-            <input type="button" value="Delete" data-input="del-effect">
-          </div>
-        <div><input type="button" id="race-add-mechanic-button" value="Add Effect" data-input='add-effect'></div>
-      </div>
-    </div>
-    <h2>Race</h2>
+    <h2>Race <input data-feature="race-name" placeholder="Race Name"></h2>
     <div data-feature-type="race" data-feature="all">
-        <div hidden><span><b>Race Name: </b></span><input data-feature="race-name"></div>
         <div hidden>
           <div><b>Description: </b></div>
           <textarea cols="64" data-feature="race-description"></textarea>
@@ -106,6 +86,7 @@
   
   <script src="../js/Calculation.js"></script>
   <script src="../js/Effect.js"></script>
+  <script src="../js/EffectTree.js"></script>
   <script src="../js/Effects.js"></script>
   <script src="../js/Attribute.js"></script>
   <script src="../js/Attributes.js"></script>

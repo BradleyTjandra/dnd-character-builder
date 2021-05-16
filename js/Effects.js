@@ -6,8 +6,17 @@ class Effects {
 
     this.attributes = attributes;
     this.effectsList = {};
+    // this.setupBaseEffects();
 
   }
+
+  // setupBaseEffects() {
+
+  //   let raceEffect = new Effect(this.attributes);
+  //   raceEffect.name = "race";
+  //   this.effectsList = Object.assign(this.effectsList, {"race" : raceEffect});
+
+  // }
 
   get(name) {
 
@@ -21,6 +30,11 @@ class Effects {
 
     let effect = new Effect(this.attributes, source);
     effect.setDetails(name, attribute, effectInfo, effectType);
+
+    // let parent = (source in this.effectsList) ? this.effectsList[source].source : source;
+    // let sourceNode = new EffectTreeNode(name, parent);
+    // effect.source = node;
+
     this.effectsList[name] = effect;
 
     return(effect);

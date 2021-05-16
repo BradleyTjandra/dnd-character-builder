@@ -9,8 +9,20 @@ class ViewMaster {
     this.controller = controller;
     this.views = {};
 
+  }
+
+  setup() {
+
     this.setupViews();
     this.setupBaseAbilityScores();
+    this.setupEffectTree();
+
+  }
+
+  setupEffectTree() {
+
+    this.effectTree = new EffectTree();
+    this.effectTree.addNode("stem", "race");
 
   }
 
@@ -62,7 +74,8 @@ class ViewMaster {
 
     this.add(
       document.getElementById("speed"),
-      this.controller.attributes.get("speed")
+      this.controller.attributes.get("speed"),
+      "value"
     );
 
     document.getElementById("feature-list").onclick = this.onClickFeatureList.bind(this);
@@ -98,10 +111,9 @@ class ViewMaster {
     let button = event.target.closest("input[type=button]");
     
     if (button) {
-
+      
       if (button.dataset.input == "add-feature") this.addFeature(event);
       if (button.dataset.input == "add-effect") this.addEffect(event);
-      // if (button.dataset.input == "del-feature") this.deleteFeature(event);
 
     }
 
@@ -115,7 +127,8 @@ class ViewMaster {
     featureElem.removeAttribute("id");
     
     let parentElem = e.target.closest("div[data-feature=all]");
-    featureElem.dataset.featureType = parentElem.dataset.featureType;
+    let featureType = parentElem.dataset.featureType;
+    featureElem.dataset.featureType = featureType;
 
     let buttonDiv = e.target.closest("div[data-feature=add-feature");
     buttonDiv.before(featureElem);
@@ -126,6 +139,8 @@ class ViewMaster {
     // create an effect for a text description of the feature
     let featureDescriptions = this.controller.attributes.get("all-features-descriptions");
     let featDescEffect = this.controller.effects.add(featureDescriptions, undefined, featureElem);
+    featureElem.dataset.effectId = featDescEffect.name;
+    this.effectTree.addNode(featureType, featDescEffect.name);
 
     // Listener for feature name changes
     let featureName = featureElem.querySelector("input[data-feature='feature-name']");
@@ -149,9 +164,12 @@ class ViewMaster {
       if (featureElem.hidden) return;
       featureElem.remove();
       this.controller.effects.removeEffect(featDescEffect);
+      this.effectTree.removeNode(featDescEffect.name);
     })
 
-    let effectDiv = featureElem.querySelector("div[data-feature='effect']")
+    let effectDiv = featureElem.querySelector("div[data-feature='effect']");
+    effectDiv.dataset.featureType = featureType;
+    effectDiv.removeAttribute("id");
     this.setupEffectListeners(effectDiv);
 
 
@@ -166,6 +184,8 @@ class ViewMaster {
     let addEffectDiv = e.target.closest("input[data-input='add-effect']").parentNode;
     addEffectDiv.before(effectElem);
 
+    effectElem.dataset.featureType = addEffectDiv.closest("[data-feature]").dataset.featureType;
+
     this.setupEffectListeners(effectElem);
 
 
@@ -176,6 +196,9 @@ class ViewMaster {
     if (div.dataset?.feature != "effect") return;
     
     let effect = this.controller.effects.add(undefined, undefined, div, "calculated");
+    div.dataset.effectId = effect.name;
+    let parentEffect = div.closest("[data-effect-id]").dataset.effectId;
+    this.effectTree.addNode(parentEffect, effect.name);
 
     let effectAttr = div.querySelector("input[data-effect='effect-attribute']");
     effectAttr.addEventListener("input", e => effect.attribute = e.target.value);
@@ -200,5 +223,37 @@ class ViewMaster {
     Object.values(this.views).forEach(view => view.update());
 
   }
+
+  // getSaveInfo() {
+
+  //   let saveInfo = {};
+
+
+  //   let featureList = document.getElementById("feature-list");
+  //   saveInfo = this.getChildren(featureList);
+
+  //   return(saveInfo);
+
+  // }
+
+  // getChildren(elem) {
+
+  //   let children = elem.querySelectorAll("[data-feature]");
+  //   let results = [];
+    
+  //   for (let child in children) {
+
+  //     results.push({
+  //       "inputType" : child.dataset.dataFeature,
+  //       "featureType" : child.dataset.featureType,
+  //       "effect" : child.dataset?.effectId,
+  //       "children" : this.getChildren(child),
+  //     });
+
+  //   }
+
+  //   return(results);
+
+  // }
 
 }

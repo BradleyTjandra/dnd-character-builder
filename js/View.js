@@ -21,7 +21,9 @@ class View {
       let val = this.linkedAttribute.value;
       this.elem.textContent = val >= 0 ? "+" + val : val;
     } else if (this.viewType == "features") {
-      this.elem.innerHTML = this.linkedAttribute.value.reduce( (accumulator, item) => {
+      let value = this.linkedAttribute.value;
+      if (value == 0) return;
+      this.elem.innerHTML = value.reduce( (accumulator, item) => {
         if (!item) return accumulator;
         return(`${accumulator}<div><b><i>${item["name"] ?? "" }</i></b> ${item['description'] ?? "" }</div>`);
       }, "");
