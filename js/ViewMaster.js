@@ -150,7 +150,7 @@ class ViewMaster {
 
     } else if (type == "feature-grouping") {
 
-      childrenElem = elem.querySelector("div[data-feature='all-feature']");
+      childrenElem = elem.querySelector(`div[data-feature='all-feature'][data-feature-type='${effectName}']`);
       
     } else if (type == "feature") {
 
@@ -190,7 +190,8 @@ class ViewMaster {
 
     if (this.isEmptyObj(children)) return;
 
-    Object.entries(children).forEach( child => this.loadFeatureTreeNode(childrenElem, child));
+    Object.entries(children).forEach( child => this.loadFeatureTreeNode(childrenElem, child) );
+    
   }
 
   isEmptyObj(obj) {
@@ -246,7 +247,7 @@ class ViewMaster {
     let featureType = featureGroupingElem.dataset.featureType;
     featureElem.dataset.featureType = featureType;
 
-    let buttonDiv = featureGroupingElem.querySelector("div[data-feature=add-feature");
+    let buttonDiv = featureGroupingElem.querySelector("div[data-feature='add-feature']");
     buttonDiv.before(featureElem);
 
     // false so that the button scrolls into view at button
