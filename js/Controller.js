@@ -16,10 +16,10 @@ class Controller {
     this.effects.loadSaveInfo();
     this.setupEffectsBetweenAttributes();
 
-    // this.view = new ViewMaster(this);
-    // this.view.setup();
-    // this.view.loadSaveInfo();
-    // this.view.refreshViews();
+    this.view = new ViewMaster(this);
+    this.view.setup();
+    this.view.loadSaveInfo();
+    this.view.refreshViews();
 
   }
 
@@ -74,8 +74,8 @@ class Controller {
 
     function pairSkills(ability, symbol) {
 
-      this.effects.add(`${symbol}skill`, `${ability}mod`, this, "calculated");
-      this.effects.add(`if(${symbol}expertise, 2*{{prof}}, if(${symbol}prof, {{prof}}, 0))`, this, "calculated");
+      this.effects.add(`${symbol}skill`, `{{${ability}mod}}`, this, "calculated");
+      this.effects.add(`${symbol}skill`, `if({{${symbol}expertise}}, 2*{{prof}}, if({{${symbol}prof}}, {{prof}}, 0))`, this, "calculated");
 
     }
 

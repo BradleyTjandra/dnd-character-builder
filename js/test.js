@@ -5,15 +5,15 @@ let b = attributes.add("hello-there", "fixed");
 b.setValue(3);
 // let b = new Attribute("hello-there");
 // b.setValue(3);
-let a = new Calculation("{{hello-there}}+if(4>(3+43),8*(20-3),4/(2-1))", attributes, undefined);
+// let a = new Calculation("{{hello-there}}+if(4>(3+43),8*(20-3),4/(2-1))", attributes, undefined);
 // let a = new Calculation("{{hello-there}}+8*(20-3)+4/(2-1)", attributes, undefined);
 // let a = new Calculation("(3+2)*4", attributes, undefined);
-// let a = new Calculation("if(false,3,4)", attributes, undefined);
+let a = new Calculation("if(false,3,if(true,1,2))", attributes, undefined);
 // alert(3+8*17);
 
 
 // a.getInputs();
 // alert(a.inputs.size);
 // alert(JSON.stringify(a.getGraph()));
-alert(a.calculate());
+console.log("calculation: " + a.calculate());
 

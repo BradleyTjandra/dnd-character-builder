@@ -9,6 +9,7 @@ class Attribute {
     this.linkedViews = [];
     this.inputs = [];
     this.calcType = calcType; // fixed or calculated
+    
   }
 
   loadFromJSON(jsonData) {
@@ -23,7 +24,7 @@ class Attribute {
 
     // if fixed we don't calculate this, this is set by the user
     if (this.calcType == "calculated") {
-      this.value = this.inputs.reduce((sum, current) => Number(sum)+Number(current.value ?? 0), 0);
+      this.value = this.inputs.reduce((sum, current) => parseFloat(sum)+parseFloat(current.value ?? 0), 0);
     } else if (this.calcType == "concat") {
       this.value = this.inputs.map(item => item.value);
     } else if (this.calcType == "boolean_or") {

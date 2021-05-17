@@ -23,6 +23,8 @@ class ViewMaster {
 
     this.effectTree = new EffectTree();
     this.effectTree.addNode("stem", "race", "feature-grouping");
+    this.effectTree.addNode("stem", "background", "feature-grouping");
+    this.effectTree.addNode("stem", "class", "feature-grouping");
 
   }
 
@@ -100,29 +102,27 @@ class ViewMaster {
     });
     let skillsElem = document.getElementById("skills");
 
-    skills.forEach( skill => {
+    let firstSkill = true;
+
+    for (let skill of skills) {
 
       let span = document.createElement("span");
       span.dataset.skill = skill.symbol;
       span.innerHTML = `${skill.label} `;
+      if (firstSkill) {
+        firstSkill = false;
+      } else {
+        span.innerHTML = ", " + span.innerHTML;
+      }
       let spanMod = document.createElement("span");
-      span.dataset.attribute = skill.symbol;
+      spanMod.dataset.attribute = skill.symbol;
       span.append(spanMod);
       skillsElem.append(span);
 
-      // let attribute = this.controller.attributes.get(skill.symbol);
-      // this.add(spanMod, attribute, "signed value");
+      let attribute = this.controller.attributes.get(skill.symbol+"skill");
+      this.add(spanMod, attribute, "signed value");
 
-    });
-
-    // for (let skill in skills) {
-
-    //   let spanMod = skillsElem.querySelector(`span[data-attribute='${skill.symbol}']`);
-    //   alert(spanMod);
-    //   let attribute = this.controller.attributes.get(skill.symbol);
-    //   this.add(spanMod, attribute, "signed value");
-
-    // }
+    };
 
   }
 

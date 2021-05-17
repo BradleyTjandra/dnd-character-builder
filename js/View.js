@@ -30,7 +30,7 @@ class View {
       if (value == 0) return;
       this.elem.innerHTML = value.reduce( (accumulator, item) => {
         if (!item) return accumulator;
-        return(`${accumulator}<div><b><i>${item["name"] ?? "" }</i></b> ${item['description'] ?? "" }</div>`);
+        return(`${accumulator}<div><b><i>${item["name"] +"." ?? "" }</i></b> ${item['description'] ?? "" }</div>`);
       }, "");
 
     } else if (this.viewType == "input-text") {

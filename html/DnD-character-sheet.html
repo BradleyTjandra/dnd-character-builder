@@ -85,11 +85,6 @@
           <textarea cols="64" data-feature="feature-description"></textarea>
         </div>
         <div data-feature="effect-all"><b>Effects</b>
-          <!-- <div data-feature="effect" id="hidden-effect">
-            <input placeholder="Attribute" data-effect="effect-attribute">
-            <input size="52" placeholder="Calculation" data-effect="effect-calculation">
-            <input type="button" value="Delete" data-input="del-effect">
-          </div> -->
           <div><input type="button" id="race-add-mechanic-button" value="Add Effect" data-input='add-effect'></div>
         </div>
       </div>
@@ -100,14 +95,19 @@
       <input type="button" value="Delete" data-input="del-effect">
     </div>
     <h2>Race <input data-feature="race-name" placeholder="Race Name"></h2>
-    <!-- <div data-feature-type="race", data-feature="all-race"> -->
       <div data-feature-type="race" data-feature="all-feature">
           <h3 hidden>Features</h3>
           <div data-feature="add-feature">
-          <input type="button" data-input="add-feature" value="Add Feature">
-        </div>
+            <input type="button" data-input="add-feature" value="Add Feature">
+          </div>
       </div>
-    <!-- </div> -->
+    <h2>Background <input data-feature="background-name" placeholder="Background Name"></h2>
+    <div data-feature-type="background" data-feature="all-feature">
+      <h3 hidden>Features</h3>
+      <div data-feature="add-feature">
+        <input type="button" data-input="add-feature" value="Add Feature">
+      </div>
+    </div>
   </div>
 
   <link rel="stylesheet" href="../css/DnD-character-sheet.css">

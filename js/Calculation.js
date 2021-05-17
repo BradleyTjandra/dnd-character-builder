@@ -220,7 +220,7 @@ class Calculation {
       } else if (this.isExitingGrouping(substr, workingIfStack, [workingBracketStack])) {
 
         // is this close bracket already "claimed" by the bracket grouping?
-        if (latestBracketGroup?.end != i && latestBracketGroup?.symbol == "(") {
+        if (latestBracketGroup?.end != i || latestBracketGroup?.symbol != "(") {
           latestIfGroup = workingIfStack.shift();
           latestIfGroup.end = i;
         }
@@ -241,7 +241,6 @@ class Calculation {
       } else if (this.nextCharCompare(substr, "+") || this.nextCharCompare(substr, "-")) {
         firstPlusMinus = firstPlusMinus ?? i;
       }
-
     }
 
     if (latestBracketGroup?.start == 0 && latestBracketGroup?.end == formula.length-1) {

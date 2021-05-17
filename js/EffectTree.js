@@ -38,7 +38,6 @@ class EffectTree {
 
   removeNode(effect) {
 
-    alert(effect);
     let node = this.nodes[effect];
     let idx = node.parent.children.findIndex(node => node.effect == effect);
     node.parent.children.splice(idx, 1);
