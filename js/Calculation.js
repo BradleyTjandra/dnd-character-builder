@@ -2,6 +2,13 @@
 
 class Calculation {
   
+  bracketingEndings = {
+    "(" : ")",
+    "[" : "]",
+    "{" : "}",
+    "if(" : ")",
+  };
+
   constructor(formula, attributes, source) {
     this.attributes = attributes;
     this.formula = formula.trim();
@@ -80,6 +87,23 @@ class Calculation {
       return(+this.arg1.calculate() * this.arg2.calculate());
     } else if (this.op == "/") {
       return(Math.floor(+this.arg1.calculate() / this.arg2.calculate()));
+    } else if (this.op == "if") {
+      let cond = this.arg1.calculate();
+      if (cond == "0" || cond == 0 || cond == "false") return (this.arg3.calculate());
+      if (this.arg1.calculate()) return (this.arg2.calculate());
+      return (this.arg3.calculate());
+    } else if (this.op == ">") {
+      return(+this.arg1.calculate() > this.arg2.calculate());
+    } else if (this.op == "<") {
+      return(+this.arg1.calculate() < this.arg2.calculate());
+    } else if (this.op == "=" || this.op == "==") {
+      return(+this.arg1.calculate() == this.arg2.calculate());
+    } else if (this.op == ">=") {
+      return(+this.arg1.calculate() >= this.arg2.calculate());
+    } else if (this.op == "<=") {
+      return(+this.arg1.calculate() <= this.arg2.calculate());
+    } else if (this.op == "!=") {
+      return(+this.arg1.calculate() != this.arg2.calculate());
     }
 
   }
@@ -94,6 +118,34 @@ class Calculation {
       new Calculation(string.substr(0, index), this.attributes, this),
       new Calculation(string.substring(index + length), this.attributes, this)
     ]);
+  }
+
+  isExitingGrouping(substr, stack, otherStacks) {
+
+    // we haven't entered the group, so can't exit
+    if (stack.length == 0) return false;
+
+    // not a symbol to exit the group
+    let closingSymbol = this.bracketingEndings[stack[0].symbol];
+    if (!this.nextCharCompare(substr, closingSymbol)) return false;
+
+    // we are exiting a different grouping 
+    let mostRecentGroupEntry = otherStacks.reduce( (accum, stack) => {
+
+      if (stack.length == 0) return accum;
+      if (stack[0].symbol != closingSymbol) return accum;
+      return(Math.max(accum,stack));
+
+    }, -1);
+    // let mostRecentGroupEntryPerStack = otherStacks.map( stack => stack[0]?.idx ?? -1)
+    // let mostRecentGroupEntry = mostRecentGroupEntryPerStack.reduce(Math.max, -1);
+    if (stack[0].start < mostRecentGroupEntry) return false;
+
+    return true;
+
+    // let isInBracketGroup = bracketStack[0].idx > (ifGroupStack[0]?.idx ?? -1) ; 
+    // isEndOfBracketGroup = isUnbracketing && isInBracketGroup;
+
   }
 
   parseFormula(formula) {
@@ -112,16 +164,14 @@ class Calculation {
       return;
     }
 
-    let bracketStack = [];
-    let ifGroupStack = [];
-    let bracketLevel= 0;
-    let currentBracketLevelOpening = 0;
+    let workingBracketStack = []; // what bracketing level we are at while parsing
+    let latestBracketGroup;
+    let workingIfStack = [];
+    let latestIfGroup;
     let attributeBracketLevel = 0;
-    let ifGroupLevel = 0;
     let currentIfGroupOpening = 0;
-    let firstMultDiv, firstPlusMinus, firstBracketGroupStart, firstBracketGroupEnd,
-    firstFeatBracketGroupStart, firstFeatBracketGroupEnd,
-    firstIfGroupStart, firstIfGroupEnd;
+    let firstTwoCharEq, firstCompare, firstMultDiv, firstPlusMinus,
+    firstFeatBracketGroupStart, firstFeatBracketGroupEnd;
 
     for (let i = 0; i < formula.length; i++) {
 
@@ -129,15 +179,14 @@ class Calculation {
       
       // Bracketing
       if (this.nextCharCompare(substr, "(")) {
-        bracketLevel++;
-        firstBracketGroupStart = firstBracketGroupStart ?? i;
-        currentBracketLevelOpening = i;
-      } else if (this.nextCharCompare(substr, ")")) {
-        bracketLevel--;
-        if (bracketLevel == 0) firstBracketGroupEnd = firstBracketGroupEnd ?? i;
+        workingBracketStack.unshift( {"start" : i, "symbol" : substr[0]} );
+        continue;
+      } else if (this.isExitingGrouping(substr, workingBracketStack, [workingIfStack])) {
+        latestBracketGroup = workingBracketStack.shift();
+        latestBracketGroup.end = i;
       }
 
-      if (bracketLevel > 0) continue;
+      if (workingBracketStack.length > 0) continue;
 
       // Attribute bracketing
       if (this.nextCharCompare(substr, "{{")) {
@@ -151,17 +200,43 @@ class Calculation {
 
       if (attributeBracketLevel > 0) continue;
 
-      // If statements
+      // if statements
       if (this.nextCharCompare(substr.toLowerCase(), "if(")) {
-        ifGroupLevel++;
-        firstIfGroupStart = firstIfGroupStart ?? i;
-      } else if (this.nextCharCompare(substr, ")")) {
-        ifGroupLevel--;
-        firstIfGroupEnd = firstIfGroupEnd ?? i;
+
+        workingIfStack.unshift( {"start" : i, "symbol" : "if("} );
+
+        // skip the "if(" characters
+        i = i + 2;
+        continue;
+
+      } else if (this.nextCharCompare(substr, ",")) {
+
+        let currentIfGrouping = workingIfStack[workingIfStack.length-1];
+        if (!currentIfGrouping) break;
+
+        if(!currentIfGrouping.comma1) currentIfGrouping.comma1 = i;
+        else if (!currentIfGrouping.comma2) currentIfGrouping.comma2 = i;
+        
+      } else if (this.isExitingGrouping(substr, workingIfStack, [workingBracketStack])) {
+
+        // is this close bracket already "claimed" by the bracket grouping?
+        if (latestBracketGroup?.end != i && latestBracketGroup?.symbol == "(") {
+          latestIfGroup = workingIfStack.shift();
+          latestIfGroup.end = i;
+        }
       }
 
-      // Multiplication
-      if (this.nextCharCompare(substr, "*") || this.nextCharCompare(substr, "/")) {
+      // Other symbols
+      if (this.nextCharCompare(substr, ">=") 
+            || this.nextCharCompare(substr, "<=") 
+            || this.nextCharCompare(substr, "!=")
+            || this.nextCharCompare(substr, "==")) {
+        firstTwoCharEq = firstTwoCharEq ?? i;
+      } else if (this.nextCharCompare(substr, "=") 
+            || this.nextCharCompare(substr, ">") 
+            || this.nextCharCompare(substr, "<")) {
+        firstCompare = firstCompare ?? i;
+      } else if (this.nextCharCompare(substr, "*") || this.nextCharCompare(substr, "/")) {
         firstMultDiv = firstMultDiv ?? i;
       } else if (this.nextCharCompare(substr, "+") || this.nextCharCompare(substr, "-")) {
         firstPlusMinus = firstPlusMinus ?? i;
@@ -169,7 +244,7 @@ class Calculation {
 
     }
 
-    if (firstBracketGroupStart == 0 && firstBracketGroupEnd == formula.length-1) {
+    if (latestBracketGroup?.start == 0 && latestBracketGroup?.end == formula.length-1) {
       this.op = "enbracket";
       this.arg1 = new Calculation(formula.slice(1, formula.length - 1), this.attributes, this);
       this.arg2 = new Calculation("{{null_op}}");
@@ -182,10 +257,16 @@ class Calculation {
       }
       this.arg1 = this.attributes.get(formula.slice(2, formula.length - 2));
       this.arg2 = new Calculation("{{null_op}}");
-    } else if (firstPlusMinus != undefined) {
-      [this.op, this.arg1, this.arg2] = this.splitAt(formula, firstPlusMinus, 1);
-    } else if (firstMultDiv != undefined) {
-      [this.op, this.arg1, this.arg2] = this.splitAt(formula, firstMultDiv, 1);
+    } else if (latestIfGroup?.start == 0 && latestIfGroup?.end == formula.length-1) {
+      this.op = "if";
+      this.arg1 = new Calculation(formula.slice(3, latestIfGroup?.comma1), this.attributes);
+      this.arg2 = new Calculation(formula.slice(latestIfGroup?.comma1+1, latestIfGroup?.comma2), this.attributes);
+      this.arg3 = new Calculation(formula.slice(latestIfGroup?.comma2+1, formula.length-1), this.attributes);
+    } else if (firstTwoCharEq) {
+      [this.op, this.arg1, this.arg2] = this.splitAt(formula, firstTwoCharEq, 2);
+    } else if (firstPlusMinus || firstMultDiv || firstCompare) {
+      let firstSymbol = firstPlusMinus || firstMultDiv || firstCompare;
+      [this.op, this.arg1, this.arg2] = this.splitAt(formula, firstSymbol, 1);
     } else {
       this.op = "id";
       this.arg1 = formula;
@@ -203,6 +284,15 @@ class Calculation {
     if (this.op == "id") return this.arg1;
 
     if (this.op == "attribute") return this.arg1.name;
+
+    if (this.op == "if") {
+      return ({
+        "op" : this.op,
+        "arg1" : this.arg1.getGraph(),
+        "arg2" : this.arg2.getGraph(),
+        "arg3" : this.arg3.getGraph()
+      });
+    }
 
     return ({
       "op" : this.op,

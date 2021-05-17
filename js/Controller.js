@@ -6,6 +6,8 @@ class Controller {
 
   constructor() {
 
+    this.setup();
+
     this.attributes = new Attributes();
     this.attributes.loadAttributes();
     this.attributes.createAttributesList();
@@ -14,16 +16,44 @@ class Controller {
     this.effects.loadSaveInfo();
     this.setupEffectsBetweenAttributes();
 
-    this.view = new ViewMaster(this);
-    this.view.setup();
-    this.view.loadSaveInfo();
-    this.view.refreshViews();
+    // this.view = new ViewMaster(this);
+    // this.view.setup();
+    // this.view.loadSaveInfo();
+    // this.view.refreshViews();
+
+  }
+
+  setup() {
+
+    let abilityAndSkills = { 
+      str : ["Athletics"],
+      dex : ["Acrobatics", "Sleight of Hand", "Stealth"],
+      int : ["Arcana", "History", "Investigation", "Nature", "Religion"],
+      wis : ["Animal Handling", "Insight", "Medicine", "Perception", "Survival"],
+      cha : ["Deception", "Intimidation", "Performance", "Persuasion"],
+    };
+
+    this.abilityAndSkills = {};
+
+    for (let ability in abilityAndSkills) {
+
+      let skills = abilityAndSkills[ability];
+
+      let skillsObj = skills.map( skill => { return({
+        symbol : skill.replace(/\s+/g, "").toLowerCase(),
+        label : skill,
+      })});
+
+      this.abilityAndSkills[ability] = skillsObj;
+      
+    }
 
   }
 
   setupEffectsBetweenAttributes() {
 
     this.setupTotalAbilityScoreAttributes();
+    this.setupSkills();
 
   }  
 
@@ -40,9 +70,24 @@ class Controller {
 
   }
 
-  saveInfo() {
+  setupSkills() {
 
-    if (!this.attributes) alert("noo!");
+    function pairSkills(ability, symbol) {
+
+      this.effects.add(`${symbol}skill`, `${ability}mod`, this, "calculated");
+      this.effects.add(`if(${symbol}expertise, 2*{{prof}}, if(${symbol}prof, {{prof}}, 0))`, this, "calculated");
+
+    }
+
+    let boundFunc = pairSkills.bind(this);
+    
+    for (let [ability, skills] of Object.entries(this.abilityAndSkills)) {
+      skills.forEach( skill => boundFunc(ability, skill.symbol));
+    }
+
+  }
+
+  saveInfo() {
 
     let saveInfo = {
       "attributes" : this.attributes.getSaveInfo(),

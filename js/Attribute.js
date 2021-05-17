@@ -47,7 +47,6 @@ class Attribute {
   triggerListeners() {
     this.listeners.forEach((value) => value.update());
     this.linkedViews.forEach((value) => value.update());
-    // alert(JSON.stringify(this.linkedViews.map(item => item.name)));
   }
 
   addInput(effect) {

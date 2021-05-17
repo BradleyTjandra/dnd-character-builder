@@ -66,6 +66,7 @@ class ViewMaster {
   setupViews() {
 
     this.setupTotalAbilityScoreViews();
+    this.setupSkills();
 
     this.add(
         document.getElementById("feature-descriptions"), 
@@ -88,6 +89,43 @@ class ViewMaster {
 
   }
 
+  setupSkills() {
+
+    let skillArr = Object.values(this.controller.abilityAndSkills);
+    let skills = skillArr.reduce( (a,v) => { a.push(...v); return(a); }, []);
+    skills = skills.sort( (a,b) => {
+      if (a.symbol > b.symbol) return 1;
+      if (a.symbol == b.symbol) return 0;
+      if (a.symbol < b.symbol) return -1;
+    });
+    let skillsElem = document.getElementById("skills");
+
+    skills.forEach( skill => {
+
+      let span = document.createElement("span");
+      span.dataset.skill = skill.symbol;
+      span.innerHTML = `${skill.label} `;
+      let spanMod = document.createElement("span");
+      span.dataset.attribute = skill.symbol;
+      span.append(spanMod);
+      skillsElem.append(span);
+
+      // let attribute = this.controller.attributes.get(skill.symbol);
+      // this.add(spanMod, attribute, "signed value");
+
+    });
+
+    // for (let skill in skills) {
+
+    //   let spanMod = skillsElem.querySelector(`span[data-attribute='${skill.symbol}']`);
+    //   alert(spanMod);
+    //   let attribute = this.controller.attributes.get(skill.symbol);
+    //   this.add(spanMod, attribute, "signed value");
+
+    // }
+
+  }
+
   loadSaveInfo() {
 
     
@@ -102,7 +140,6 @@ class ViewMaster {
 
   loadFeatureTreeNode(elem, node) {
 
-    // alert("alert: " + node);
     let [key, children] = node;
     let [effectName, type] = key.split(",");
     let childrenElem;

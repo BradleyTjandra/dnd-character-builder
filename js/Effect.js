@@ -17,7 +17,6 @@ class Effect {
     this.name = name;
     this.effectType = effectType; 
     this.attribute = attribute;
-    // fixed, calculated, list (for spells), etc.
     this.effectInfo = effectInfo;
   }
 
@@ -94,7 +93,6 @@ class Effect {
       
       if (!this.attributes.contains(newAttribute)) {
         this.removeLinks();
-        // alert(this.attribute);
         this._attribute["valid"] = false;
         this._attribute["data"] = undefined;
         this.isSetup = false;
@@ -123,9 +121,6 @@ class Effect {
   removeLinks(attribute) {
 
     if (!this.isSetup) return;
-
-    // alert(attribute?.name);
-    // alert(this.attribute.name);
 
     if (!attribute) attribute = this.attribute;
 

@@ -39,10 +39,14 @@ class Attributes {
     this.add("speed", "calculated");
     this.add("languages", "concat");
 
-    ["acrobatics", "animalhandling", "arcana", "athletics", "deception", "history",
-    "history", "insight", "intimidation", "investigation", "medicine", "nature", 
-    "perception", "performance", "persuasion", "religion", "sleightofhand", "stealth", 
-    "survival"].forEach( this.createSkill );
+    let boundFunc = this.createSkill.bind(this);
+
+    // ["acrobatics", "animalhandling", "arcana", "athletics", "deception", "history",
+    // "history", "insight", "intimidation", "investigation", "medicine", "nature", 
+    // "perception", "performance", "persuasion", "religion", "sleightofhand", "stealth", 
+    // "survival"].forEach( boundFunc );
+
+    this.add("prof", "calculated");
 
   }
 
