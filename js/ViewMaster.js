@@ -22,9 +22,9 @@ class ViewMaster {
   setupEffectTree() {
 
     this.effectTree = new EffectTree();
-    this.effectTree.addNode("stem", "race", "feature-grouping");
-    this.effectTree.addNode("stem", "background", "feature-grouping");
-    this.effectTree.addNode("stem", "class", "feature-grouping");
+    this.effectTree.addNode("stem", "race", "character-component");
+    this.effectTree.addNode("stem", "background", "character-component");
+    this.effectTree.addNode("stem", "class", "character-component");
 
   }
 
@@ -69,11 +69,13 @@ class ViewMaster {
 
     this.setupTotalAbilityScoreViews();
     this.setupSkills();
+    this.setupSavingThrows();
 
     this.add(
         document.getElementById("feature-descriptions"), 
         this.controller.attributes.get("all-features-descriptions"),
-        "features");
+        "features"
+    );
 
     this.add(
       document.getElementById("speed"),
@@ -85,6 +87,24 @@ class ViewMaster {
       document.getElementById("languages"),
       this.controller.attributes.get("languages"),
       "join"
+    );
+
+    this.add(
+      document.getElementById("proficiencies"),
+      this.controller.attributes.get("proficiencies"),
+      "join"
+    );
+
+    this.add(
+      document.getElementById("hp"),
+      this.controller.attributes.get("hp"),
+      "value"
+    );
+
+    this.add(
+      document.getElementById("prof"),
+      this.controller.attributes.get("prof"),
+      "signed value"
     );
 
     document.getElementById("feature-list").onclick = this.onClickFeatureList.bind(this);
@@ -126,17 +146,62 @@ class ViewMaster {
 
   }
 
+  setupSavingThrows() {
+
+    let savingThrowsElem = document.getElementById("saving-throws");
+    let firstSave = true;
+
+    for (let ability of this.controller.abilityScores) {
+
+      let span = document.createElement("span");
+      span.dataset.savingThrow = ability;
+      span.innerHTML = ability.toUpperCase()+" ";
+      if (firstSave) {
+        firstSave = false;
+      } else {
+        span.innerHTML = ", " + span.innerHTML;
+      }
+      let spanMod = document.createElement("span");
+      spanMod.dataset.attribute = ability+"save";
+      span.append(spanMod);
+      savingThrowsElem.append(span);
+
+      let attribute = this.controller.attributes.get(ability+"save");
+      this.add(spanMod, attribute, "signed value");
+
+    }
+
+  }
+
   loadSaveInfo() {
 
     
     let characterSheetData = JSON.parse(localStorage.getItem("characterSheet"));
     if (!characterSheetData) return;
-    let featuresTree = Object.entries(characterSheetData?.featuresTree);
-    if (!featuresTree) return;
+    let featuresTree = characterSheetData?.featuresTree;
+    
+    // if there was no race or background in the saved info, we load elems for them here
+    // let characterComponents = featuresTree["stem,stem"];
+    for (let component of ["race", "background"]) {
 
-    this.loadFeatureTreeNode(document, featuresTree[0]);
+      if (featuresTree != undefined) {
+        if (!this.isEmptyObj(featuresTree["stem,stem"][component+",character-component"])) continue;
+      }
+
+      let characterComponentElem = document.querySelector(`div[data-feature='character-component'][data-feature-type='${component}']`);
+      let featureGroupElem  = this.addFeatureGroupElem(characterComponentElem);
+      let effect = this.addFeatureGroupEffect(featureGroupElem);
+      this.setupFeatureGroupListeners(featureGroupElem, effect);
+
+    }
+    
+    if (featuresTree) this.loadFeatureTreeNode(document, Object.entries(featuresTree)[0]);
+
+    window.scrollTo(0, 0);
 
   }
+
+
 
   loadFeatureTreeNode(elem, node) {
 
@@ -148,9 +213,16 @@ class ViewMaster {
 
       childrenElem = elem.getElementById("feature-list");
 
+    } else if (type == "character-component") {
+
+      childrenElem = elem.querySelector(`div[data-feature='character-component'][data-feature-type='${effectName}']`);
+
     } else if (type == "feature-grouping") {
 
-      childrenElem = elem.querySelector(`div[data-feature='all-feature'][data-feature-type='${effectName}']`);
+      let childrenElem = this.addFeatureGroupElem(elem);
+      let effect = this.controller.effects.get(effectName);
+      this.setupFeatureGroupListeners(childrenElem, effect);
+      childrenElem.querySelector("input[data-feature='feature-group-name']").value = effect.effectInfo;
       
     } else if (type == "feature") {
 
@@ -231,6 +303,7 @@ class ViewMaster {
       
       if (button.dataset.input == "add-feature") this.addFeature(event);
       if (button.dataset.input == "add-effect") this.addEffect(event);
+      if (button.dataset.input == "add-feature-group") this.addFeatureGroup(event);
 
     }
 
@@ -243,20 +316,14 @@ class ViewMaster {
     featureElem.hidden = false;
     featureElem.removeAttribute("id");
     
-    // let parentElem = e.target.closest("div[data-feature=all]");
     let featureType = featureGroupingElem.dataset.featureType;
     featureElem.dataset.featureType = featureType;
 
-    let buttonDiv = featureGroupingElem.querySelector("div[data-feature='add-feature']");
-    buttonDiv.before(featureElem);
+    let addFeatureButton = featureGroupingElem.querySelector("input[data-input='add-feature']");
+    addFeatureButton.before(featureElem);
 
     // false so that the button scrolls into view at button
-    buttonDiv.scrollIntoView(false); 
-
-    // set up effect 
-    // let effectDiv = featureElem.querySelector("div[data-feature='effect']");
-    // effectDiv.dataset.featureType = featureType;
-    // effectDiv.removeAttribute("id");
+    addFeatureButton.scrollIntoView(false); 
 
     return(featureElem);
 
@@ -325,9 +392,6 @@ class ViewMaster {
     this.effectTree.addNode(elem.dataset.featureType, effect.name, "feature");
     this.addFeatureListeners(elem, effect);
   
-    // let effectDiv = elem.querySelector("div[data-feature='effect']");
-    // this.setupEffectListeners(effectDiv);
-
   }
 
   addEffect(e) {
@@ -336,6 +400,49 @@ class ViewMaster {
     let effectElem = this.addEffectElem(effectsElem);
     let effect = this.controller.effects.add(undefined, undefined, "user", "calculated");
     this.setupEffectListeners(effectElem, effect);
+
+  }
+  
+  addFeatureGroup(e) {
+    
+    let classGroupingElem = e.target.closest("div[data-feature='character-component']");
+    let featureGroup = this.addFeatureGroupElem(classGroupingElem);
+    let effect = this.addFeatureGroupEffect(featureGroup);
+    this.setupFeatureGroupListeners(featureGroup, effect);
+    
+  }
+
+  addFeatureGroupEffect(elem) {
+
+    let featureType = elem.dataset.featureType;
+    let effect = this.controller.effects.add(featureType+"-name", "", "user", "fixed");
+    return(effect);
+
+  }
+
+  addFeatureGroupElem(characterComponentElem) {
+
+    let classElem = document.getElementById("hidden-all-feature").cloneNode(true);
+    classElem.hidden = false;
+    classElem.removeAttribute("id");
+
+    let parentElem = characterComponentElem.closest("[data-feature-type]");
+    classElem.dataset.featureType = parentElem.dataset.featureType;
+
+    let addClassButton = characterComponentElem.querySelector("input[data-input='add-feature-group']");
+    if (addClassButton) addClassButton.before(classElem);
+    else parentElem.append(classElem);
+    
+    return(classElem);
+    
+  }
+
+  setupFeatureGroupListeners(elem, effect) {
+
+    elem.dataset.effectId = effect.name;
+    this.effectTree.addNode(elem.dataset.featureType, effect.name, "feature-grouping");
+    let featureGroupElem = elem.querySelector("input[data-feature='feature-group-name']");
+    featureGroupElem.addEventListener("input", e => effect.effectInfo = e.target.value);
 
 
   }
@@ -362,6 +469,8 @@ class ViewMaster {
     })
 
   }
+
+
   
   updateModel(attribute, data) {
     attribute.setValue(data);

@@ -44,7 +44,7 @@ class Effect {
 
   set effectInfo(newInfo) {
 
-    if (!newInfo) return;
+    if (newInfo == undefined) return;
 
     // update effect info
     let oldInfo = Object.assign({}, this.effectInfo);

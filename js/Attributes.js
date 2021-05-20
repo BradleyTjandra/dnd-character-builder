@@ -34,6 +34,7 @@ class Attributes {
     this.createAbilityScoreAttributes(value => "base-ability-score-"+value, "fixed");
     this.createAbilityScoreAttributes(value => value, "calculated");
     this.createAbilityScoreAttributes(value => value+"mod", "calculated");
+    this.createAbilityScoreAttributes(value => value+"save", "calculated");
 
     this.add("all-features-descriptions", "concat");
     this.add("speed", "calculated");
@@ -47,6 +48,15 @@ class Attributes {
     "survival"].forEach( boundFunc );
 
     this.add("prof", "calculated");
+
+    this.add("background-name", "calculated");
+    this.add("race-name", "calculated");
+    this.add("class-name", "ordered-list");
+
+    this.add("hp", "calculated");
+    this.add("hitdice", "hitdice");
+    this.add("ac", "calculated");
+    this.add("proficiencies", "concat");
 
   }
 

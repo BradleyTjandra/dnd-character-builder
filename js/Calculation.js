@@ -39,6 +39,10 @@ class Calculation {
       validity = validity & this.arg2.getValidity();
     }
 
+    if (this.arg3 instanceof Calculation) {
+      validity = validity & this.arg3.getValidity();
+    }
+
     return(validity);
 
   }
@@ -57,6 +61,12 @@ class Calculation {
     
     if (this.arg2 instanceof Calculation) {
       for (let inp of this.arg2.getInputs()) {
+        if (inp) union.add(inp);
+      }
+    }
+
+    if (this.arg3 instanceof Calculation) {
+      for (let inp of this.arg3.getInputs()) {
         if (inp) union.add(inp);
       }
     }

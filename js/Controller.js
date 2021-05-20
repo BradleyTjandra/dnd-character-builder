@@ -2,7 +2,7 @@
 
 class Controller {
   
-  abilityScores = ["str", "dex", "con", "wis", "cha", "int"];
+  abilityScores = ["str", "dex", "con", "int", "wis", "cha"];
 
   constructor() {
 
@@ -63,6 +63,7 @@ class Controller {
 
       this.effects.add(value, `{{base-ability-score-${value}}}`, this, "calculated");
       this.effects.add(`${value}mod`, `({{${value}}}-10)/2`, this, "calculated");
+      this.effects.add(`${value}save`, `{{${value}mod}}`, this, "calculated");
 
     }
 

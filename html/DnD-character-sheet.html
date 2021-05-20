@@ -4,10 +4,21 @@
     <meta charset="UTF-8">
   </head>
   <body>
-    <h2>CHARACTER NAME Sense Amid Madness, Wisdom Admist Folly</h2>
-    <div><b>Armor Class</b> 12</div>
-    <div><b>Hit Points</b> 29 3d8</div>
+    <h1>CHARACTER NAME Sense Amid Madness, Wisdom Admist Folly</h1>
+    <div>
+      <b>HP</b> 
+      <input size=3>
+      / <span id="hp">0</span>
+      <input type="button" value="+">
+      <input type="button" value="-"> 
+      <input size=3>
+      <input type="button" value="Calculate""> 
+    </div>
+    <div><b>Hit dice</b> <span id="hitdice">3d8</span></div>
+    <div><b>AC</b> 8</div>
     <div><b>Speed</b> <span id="speed">0</span></div>
+    <div><b>Saving Throws</b> <span id="saving-throws"></span></div>
+    <h2>Ability Scores</h2>
     <table>
       <tr>
         <td class="ability-score-td"><b>STR</b> 
@@ -36,10 +47,12 @@
         </td>
       </tr>
     </table>
-    <div><b>Saving Throws</b> <span id="saving-throws"></span></div>
+    <h2>Other Info</h2>
+    <div><b>Proficiency Bonus</b> <span id="prof"></span></div>
     <div><b>Skills</b> <span id="skills"></span></div>
     <div><b>Senses</b> <span id="senses"></span></div>
     <div><b>Languages</b> <span id="languages"></span></div>
+    <div><b>Other proficiencies</b> <span id="proficiencies"></span></div>
     <h2>Features</h2>
     <div id="feature-descriptions"></div>
     <h2>Base Ability Scores</h2>
@@ -73,48 +86,53 @@
     </table>
   </body>
   <div id="feature-list">
-    <div data-feature-type="hidden">
-      <div id="hidden-feature" data-feature="feature-all" data-effect-id="" hidden>
-        <div>
-          <b>Feature Name: </b>
-          <input data-feature="feature-name" size=48>
-          <input type="button" value="Delete Feature" data-input="del-feature">
-        </div>
-        <div>
-          <div><b>Feature Description: </b></div>
-          <textarea cols="64" data-feature="feature-description"></textarea>
-        </div>
-        <div data-feature="effect-all"><b>Effects</b>
-          <div><input type="button" id="race-add-mechanic-button" value="Add Effect" data-input='add-effect'></div>
-        </div>
-      </div>
+    <h2>Race</h2>
+    <div data-feature-type="race" data-feature="character-component">
+      <!-- <div data-feature-type="race" data-feature="all-feature">
+        <input type="button" data-input="add-feature" value="Add Feature">
+      </div> -->
     </div>
+    <h2>Background</h2>
+    <div data-feature-type="background" data-feature="character-component">
+      <!-- <div data-feature-type="background" data-feature="all-feature">
+        <input type="button" data-input="add-feature" value="Add Feature">
+      </div> -->
+    </div>
+    <h2>Classes</h2>
+    <div data-feature-type="class" data-feature="character-component">
+      <input type="button" data-input="add-feature-group" value="Add Class">
+    </div>
+    <h2>Inventory</h2>
+  </div>
+
+  <div id="templates" hidden>
+
     <div data-feature="effect" id="hidden-effect" hidden>
       <input placeholder="Attribute" data-effect="effect-attribute">
       <input size="52" placeholder="Calculation" data-effect="effect-calculation">
       <input type="button" value="Delete" data-input="del-effect">
     </div>
-    <h2>Race <input data-feature="race-name" placeholder="Race Name"></h2>
-    <div data-feature-type="race" data-feature="all-feature">
-        <h3 hidden>Features</h3>
-        <div data-feature="add-feature">
-          <input type="button" data-input="add-feature" value="Add Feature">
-        </div>
-    </div>
-    <h2>Background <input data-feature="background-name" placeholder="Background Name"></h2>
-    <div data-feature-type="background" data-feature="all-feature">
-      <h3 hidden>Features</h3>
-      <div data-feature="add-feature">
-        <input type="button" data-input="add-feature" value="Add Feature">
+
+    <div id="hidden-feature" data-feature="feature-all"  hidden>
+      <div>
+        <b>Feature Name: </b>
+        <input data-feature="feature-name" size=48>
+        <input type="button" value="Delete Feature" data-input="del-feature">
+      </div>
+      <div>
+        <div><b>Feature Description: </b></div>
+        <textarea cols="64" data-feature="feature-description"></textarea>
+      </div>
+      <div data-feature="effect-all"><b>Effects</b>
+        <div><input type="button" value="Add Effect" data-input='add-effect'></div>
       </div>
     </div>
-    <h2>Class <input data-feature="class-name" placeholder="Class Name"></h2>
-    <div data-feature-type="class" data-feature="all-feature">
-      <h3 hidden>Features</h3>
-      <div data-feature="add-feature">
-        <input type="button" data-input="add-feature" value="Add Feature">
-      </div>
+
+    <div data-feature="all-feature" id="hidden-all-feature">
+      <h3>Name <input data-feature="feature-group-name" placeholder="Class Name" value=""></h3>
+      <input type="button" data-input="add-feature" value="Add Feature">
     </div>
+    
   </div>
 
   <link rel="stylesheet" href="../css/DnD-character-sheet.css">
