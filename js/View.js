@@ -46,6 +46,16 @@ class View {
       if (value == 0) return;
       this.elem.innerHTML = value.filter( x => x != "").join(", ");
 
+    } else if (this.viewType == "resource") {
+
+      let value = this.linkedAttribute.value;
+
+      let currentElem = this.elem.querySelector("[data-feature*='current']");
+      let totalElem = this.elem.querySelector("[data-feature*='total']");
+
+      currentElem.value = (value.current ?? 0);
+      totalElem.innerHTML = (value.total ?? 0);
+
     }
 
   }

@@ -16,6 +16,7 @@ class ViewMaster {
     this.setupViews();
     this.setupBaseAbilityScores();
     this.setupEffectTree();
+    this.setupHP();
 
   }
 
@@ -98,7 +99,7 @@ class ViewMaster {
     this.add(
       document.getElementById("hp"),
       this.controller.attributes.get("hp"),
-      "value"
+      "resource"
     );
 
     this.add(
@@ -181,7 +182,6 @@ class ViewMaster {
     let featuresTree = characterSheetData?.featuresTree;
     
     // if there was no race or background in the saved info, we load elems for them here
-    // let characterComponents = featuresTree["stem,stem"];
     for (let component of ["race", "background"]) {
 
       if (featuresTree != undefined) {
@@ -456,7 +456,14 @@ class ViewMaster {
     this.effectTree.addNode(parentEffect, effect.name, "effect");
 
     let effectAttr = div.querySelector("input[data-effect='effect-attribute']");
-    effectAttr.addEventListener("input", e => effect.attribute = e.target.value);
+    effectAttr.addEventListener("input", e => {
+      effect.attribute = e.target.value;
+      if (e.target.value == "hp") {
+        effect.effectType = "calculated resource-total";
+      } else {
+        effect.effectType = "calculated"
+      };
+    });
 
     let effectCalc = div.querySelector("input[data-effect='effect-calculation']");
     effectCalc.addEventListener("input", e => effect.effectInfo = e.target.value);
@@ -470,7 +477,28 @@ class ViewMaster {
 
   }
 
+  setupHP() {
+    
+    let hpDiv = document.getElementById("hp");
+    let hpAttribute = this.controller.attributes.get("hp");    
+    
+    let hpCurrentInput = hpDiv.querySelector("[data-feature='hp-current']");
+    hpCurrentInput.addEventListener("input", e => hpAttribute.value.current = parseFloat(e.target.value));
 
+    let hpIncrement = hpDiv.querySelector("input[value='+']");
+    hpIncrement.addEventListener("click", e => {
+      hpAttribute.value.current++;
+      hpCurrentInput.value = hpAttribute.value.current;
+    })
+    
+    let hpDecrement = hpDiv.querySelector("input[value='-']");
+    hpDecrement.addEventListener("click", e => {
+      hpAttribute.value.current--;
+      hpCurrentInput.value = hpAttribute.value.current;
+    })
+
+
+  }
   
   updateModel(attribute, data) {
     attribute.setValue(data);

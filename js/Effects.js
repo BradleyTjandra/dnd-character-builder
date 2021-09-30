@@ -6,6 +6,7 @@ class Effects {
 
     this.attributes = attributes;
     this.effectsList = {};
+    this.effectsToSave = {};
 
   }
 

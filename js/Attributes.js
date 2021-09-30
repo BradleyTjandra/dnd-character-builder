@@ -53,7 +53,7 @@ class Attributes {
     this.add("race-name", "calculated");
     this.add("class-name", "ordered-list");
 
-    this.add("hp", "calculated");
+    this.add("hp", "resource");
     this.add("hitdice", "hitdice");
     this.add("ac", "calculated");
     this.add("proficiencies", "concat");

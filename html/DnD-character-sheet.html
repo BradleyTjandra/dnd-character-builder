@@ -7,15 +7,15 @@
     <h1>CHARACTER NAME Sense Amid Madness, Wisdom Admist Folly</h1>
     <div>
       <b>HP</b> 
-      <input size=3>
-      / <span id="hp">0</span>
-      <input type="button" value="+">
-      <input type="button" value="-"> 
-      <input size=3>
-      <input type="button" value="Calculate""> 
+      <span id ="hp" data-feature="hp">
+        <input data-feature="hp-current" size=3>
+        / <span data-feature="hp-total">0</span>
+        <input type="button" value="+">
+        <input type="button" value="-"> 
+      </span>
     </div>
     <div><b>Hit dice</b> <span id="hitdice">3d8</span></div>
-    <div><b>AC</b> 8</div>
+    <div><b>AC</b> <span id="ac"></span></div>
     <div><b>Speed</b> <span id="speed">0</span></div>
     <div><b>Saving Throws</b> <span id="saving-throws"></span></div>
     <h2>Ability Scores</h2>
@@ -87,17 +87,9 @@
   </body>
   <div id="feature-list">
     <h2>Race</h2>
-    <div data-feature-type="race" data-feature="character-component">
-      <!-- <div data-feature-type="race" data-feature="all-feature">
-        <input type="button" data-input="add-feature" value="Add Feature">
-      </div> -->
-    </div>
+    <div data-feature-type="race" data-feature="character-component"></div>
     <h2>Background</h2>
-    <div data-feature-type="background" data-feature="character-component">
-      <!-- <div data-feature-type="background" data-feature="all-feature">
-        <input type="button" data-input="add-feature" value="Add Feature">
-      </div> -->
-    </div>
+    <div data-feature-type="background" data-feature="character-component"></div>
     <h2>Classes</h2>
     <div data-feature-type="class" data-feature="character-component">
       <input type="button" data-input="add-feature-group" value="Add Class">

@@ -6,7 +6,7 @@ class Controller {
 
   constructor() {
 
-    this.setup();
+    this.setupConstants();
 
     this.attributes = new Attributes();
     this.attributes.loadAttributes();
@@ -23,7 +23,7 @@ class Controller {
 
   }
 
-  setup() {
+  setupConstants() {
 
     let abilityAndSkills = { 
       str : ["Athletics"],
@@ -51,33 +51,24 @@ class Controller {
   }
 
   setupEffectsBetweenAttributes() {
-
     this.setupTotalAbilityScoreAttributes();
     this.setupSkills();
-
   }  
 
   setupTotalAbilityScoreAttributes() {
-    
     function pairAbilityScores(value) {
-
       this.effects.add(value, `{{base-ability-score-${value}}}`, this, "calculated");
       this.effects.add(`${value}mod`, `({{${value}}}-10)/2`, this, "calculated");
       this.effects.add(`${value}save`, `{{${value}mod}}`, this, "calculated");
-
     }
-
     this.abilityScores.forEach(pairAbilityScores.bind(this));
-
   }
 
   setupSkills() {
 
     function pairSkills(ability, symbol) {
-
       this.effects.add(`${symbol}skill`, `{{${ability}mod}}`, this, "calculated");
       this.effects.add(`${symbol}skill`, `if({{${symbol}expertise}}, 2*{{prof}}, if({{${symbol}prof}}, {{prof}}, 0))`, this, "calculated");
-
     }
 
     let boundFunc = pairSkills.bind(this);

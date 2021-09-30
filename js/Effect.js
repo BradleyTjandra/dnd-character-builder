@@ -22,7 +22,7 @@ class Effect {
 
   refreshEffectInfoValidity() {
 
-    if (this.effectType == "calculated") {
+    if (this.effectType.includes("calculated")) {
       this._effectInfo["valid"] = this.effectInfo.getValidity();
     } else {
       this._effectInfo["valid"] = true;
@@ -34,11 +34,11 @@ class Effect {
 
     if (!this.isSetup) return undefined;
     
-    if (this.effectType == "fixed") {
+    if (this.effectType.includes("fixed")) {
       return this.effectInfo;
-    } else if (this.effectType == "calculated") {
+    } else if (this.effectType.includes("calculated")) {
       return this.formula.calculate();
-    }
+    } 
 
   }
 
@@ -52,7 +52,7 @@ class Effect {
     this._effectInfo['data'] = newInfo;
 
     // recreate the supporting information
-    if (this.effectType == "calculated") {
+    if (this.effectType.includes("calculated")) {
 
       let formulaText;
       if (newInfo[0] == "+" || newInfo[0] == "-")  {
@@ -101,9 +101,6 @@ class Effect {
 
       newAttribute = this.attributes.get(newAttribute);
     }
-
-
-    // if (newAttribute.name == this.attribute?.name) return;
 
     this.removeLinks();
     this._attribute["data"] = newAttribute;
