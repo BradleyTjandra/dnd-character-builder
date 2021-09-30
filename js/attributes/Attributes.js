@@ -5,26 +5,20 @@ class Attributes {
   abilityScores = ["str", "dex", "con", "wis", "cha", "int"];
 
   constructor() {
-
     this.attributeList = [];
-
   }
 
   loadAttributes() {
 
     let characterSheetData = JSON.parse(localStorage.getItem("characterSheet"));
-
     if (!characterSheetData) return;
 
     let attributes = Object.values(characterSheetData?.attributes);
-
     if (!attributes) return;
 
     for (let attributeData of attributes) {
-
       let attribute = this.add(attributeData.name, attributeData.calcType);
       attribute.setValue(attributeData.value);
-
     }
 
   }

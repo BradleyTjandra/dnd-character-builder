@@ -1,6 +1,6 @@
 "use strict";
 
-class View {
+export class View {
 
   constructor(elem, attribute, viewType = "value") {
 

@@ -1,116 +1,67 @@
 "use strict";
 
-class ViewMaster {
+import { View } from "./View.js";
 
-  abilityScores = ["str", "dex", "con", "wis", "cha", "int"];
+export class UserInput extend View {
 
-  constructor(controller) {
-
-    this.controller = controller;
-    this.views = {};
-
+  constructor(views) {
+    this.views = views;
+    this.controller = views.controller;
   }
 
-  setup() {
+  // add(elem, attribute, viewType) {
 
-    this.setupViews();
-    this.setupBaseAbilityScores();
-    this.setupEffectTree();
-    this.setupHP();
+  //   let view = new View(elem, attribute, viewType);
+  //   this.views[attribute.name] = view;
+  //   return(view);
 
-  }
+  // }
 
-  setupEffectTree() {
+  // setupViews() {
 
-    this.effectTree = new EffectTree();
-    this.effectTree.addNode("stem", "race", "character-component");
-    this.effectTree.addNode("stem", "background", "character-component");
-    this.effectTree.addNode("stem", "class", "character-component");
+  //   this.setupTotalAbilityScoreViews();
+  //   this.setupSkills();
+  //   this.setupSavingThrows();
 
-  }
+  //   this.add(
+  //       document.getElementById("feature-descriptions"), 
+  //       this.controller.attributes.get("all-features-descriptions"),
+  //       "features"
+  //   );
 
-  setupBaseAbilityScores() {
+  //   this.add(
+  //     document.getElementById("speed"),
+  //     this.controller.attributes.get("speed"),
+  //     "value"
+  //   );
 
-    let table = document.getElementById("base-ability-scores");
-    table.oninput = (e => {
-      
-      let view = e.target.closest('input');
-      if (!view) return;
-      if (!table.contains(view)) return;
-      if (!view.hasAttribute("data-base-ability-score")) return;
+  //   this.add(
+  //     document.getElementById("languages"),
+  //     this.controller.attributes.get("languages"),
+  //     "join"
+  //   );
 
-      let value = parseInt(view.value);
-      if (view.value == "") value = 0;
-      if (isNaN(value)) return;
+  //   this.add(
+  //     document.getElementById("proficiencies"),
+  //     this.controller.attributes.get("proficiencies"),
+  //     "join"
+  //   );
 
-      let ability = view.dataset.baseAbilityScore;
-      let attribute = this.controller.attributes.get("base-ability-score-"+ability);
-      attribute.setValue(value);
+  //   this.add(
+  //     document.getElementById("hp"),
+  //     this.controller.attributes.get("hp"),
+  //     "resource"
+  //   );
 
-    });
+  //   this.add(
+  //     document.getElementById("prof"),
+  //     this.controller.attributes.get("prof"),
+  //     "signed value"
+  //   );
 
-    let inputElem, attribute;
-    for (let ability of this.controller.abilityScores) { 
-      inputElem = document.querySelector(`input[data-base-ability-score='${ability}']`);
-      attribute = this.controller.attributes.get("base-ability-score-"+ability);
-      this.add(inputElem, attribute, "input-text");
-    }
+  //   document.getElementById("feature-list").onclick = this.onClickFeatureList.bind(this);
 
-  }
-
-  add(elem, attribute, viewType) {
-
-    let view = new View(elem, attribute, viewType);
-    this.views[attribute.name] = view;
-    return(view);
-
-  }
-
-  setupViews() {
-
-    this.setupTotalAbilityScoreViews();
-    this.setupSkills();
-    this.setupSavingThrows();
-
-    this.add(
-        document.getElementById("feature-descriptions"), 
-        this.controller.attributes.get("all-features-descriptions"),
-        "features"
-    );
-
-    this.add(
-      document.getElementById("speed"),
-      this.controller.attributes.get("speed"),
-      "value"
-    );
-
-    this.add(
-      document.getElementById("languages"),
-      this.controller.attributes.get("languages"),
-      "join"
-    );
-
-    this.add(
-      document.getElementById("proficiencies"),
-      this.controller.attributes.get("proficiencies"),
-      "join"
-    );
-
-    this.add(
-      document.getElementById("hp"),
-      this.controller.attributes.get("hp"),
-      "resource"
-    );
-
-    this.add(
-      document.getElementById("prof"),
-      this.controller.attributes.get("prof"),
-      "signed value"
-    );
-
-    document.getElementById("feature-list").onclick = this.onClickFeatureList.bind(this);
-
-  }
+  // }
 
   setupSkills() {
 

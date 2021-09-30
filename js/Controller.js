@@ -1,6 +1,8 @@
 "use strict";
 
-class Controller {
+import {Views} from "./Views.js"
+
+export class Controller {
   
   abilityScores = ["str", "dex", "con", "int", "wis", "cha"];
 
@@ -16,10 +18,10 @@ class Controller {
     this.effects.loadSaveInfo();
     this.setupEffectsBetweenAttributes();
 
-    this.view = new ViewMaster(this);
-    this.view.setup();
-    this.view.loadSaveInfo();
-    this.view.refreshViews();
+    this.views = new Views(this);
+    this.views.setup();
+    this.views.loadSaveInfo();
+    this.views.refreshViews();
 
   }
 
@@ -84,13 +86,11 @@ class Controller {
     let saveInfo = {
       "attributes" : this.attributes.getSaveInfo(),
       "effects" : this.effects.getSaveInfo(),
-      "featuresTree" : this.view.effectTree.getTree(),
+      "featuresTree" : this.views.effectTree.getTree(),
     };
     localStorage.characterSheet = JSON.stringify(saveInfo);
     return(saveInfo);
 
   }
 
-
-  
 }
