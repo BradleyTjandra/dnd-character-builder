@@ -1,6 +1,6 @@
 "use strict";
 
-class EffectTree {
+export default class FeatureTree {
 
   constructor() {
 

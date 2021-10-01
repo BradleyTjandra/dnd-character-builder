@@ -1,6 +1,8 @@
 "use strict";
 
-class Attributes {
+import Attribute from "./Attribute.js";
+
+export default class Attributes {
   
   abilityScores = ["str", "dex", "con", "wis", "cha", "int"];
 

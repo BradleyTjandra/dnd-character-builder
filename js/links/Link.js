@@ -1,6 +1,8 @@
 "use strict";
 
-class Effect {
+import Calculation from "./Calculation.js";
+
+export default class Link {
 
   constructor(attributes, source) {
     this.attributes = attributes;

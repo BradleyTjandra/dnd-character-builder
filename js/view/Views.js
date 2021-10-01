@@ -1,6 +1,6 @@
 "use strict";
 
-import { View } from "./View.js";
+// import { Display } from "./displays/Display.js";
 import { linkBaseAbilityScores, linkTotalAbilityScores, linkSavingThrows } 
   from "./setup/AbilityScores.js";
 import { linkSkills } from "./setup/Skills.js";
@@ -13,8 +13,10 @@ import * as featureGroup from "./features/FeatureGroup.js";
 import * as feature from "./features/Feature.js";
 import * as effect from "./features/Effect.js";
 import isEmptyObj from "../helpers/isEmptyObj.js";
+import FeatureTree from "./features/FeatureTree.js";
+import newDisplay from "./displays/newDisplay.js";
 
-export class Views {
+export default class Views {
 
   constructor(controller) {
     this.controller = controller;
@@ -37,20 +39,20 @@ export class Views {
 
   setupEffectTree() {
 
-    this.effectTree = new EffectTree();
+    this.effectTree = new FeatureTree();
     this.effectTree.addNode("stem", "race", "character-component");
     this.effectTree.addNode("stem", "background", "character-component");
     this.effectTree.addNode("stem", "class", "character-component");
 
   }
 
-  add(elem, attribute, viewType) {
+  // add(elem, attribute, viewType) {
 
-    let view = new View(elem, attribute, viewType);
-    this.views[attribute.name] = view;
-    return(view);
+  //   let view = new Display(elem, attribute, viewType);
+  //   this.views[attribute.name] = view;
+  //   return(view);
 
-  }
+  // }
   
   loadSaveInfo() {
     
@@ -96,6 +98,8 @@ Views.prototype.addFeatureListeners = binder(feature.addListeners);
 Views.prototype.addEffectElem = binder(effect.addElem);
 Views.prototype.addEffectEffect = binder(effect.addEffect);
 Views.prototype.addEffectListeners = binder(effect.addListeners);
+
+Views.prototype.add = binder(newDisplay);
 
 function binder(func) {
   return(function(...args) {

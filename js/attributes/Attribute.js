@@ -4,7 +4,7 @@ function sumOver(arr) {
   return(arr.reduce( (sum,i) => sum + parseFloat(i.value ?? 0), 0));
 }
 
-class Attribute {
+export default class Attribute {
   
   constructor(name, calcType = "fixed") {
     this.name = name;

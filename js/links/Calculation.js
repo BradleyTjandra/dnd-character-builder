@@ -1,6 +1,6 @@
 "use strict";
 
-class Calculation {
+export default class Calculation {
   
   bracketingEndings = {
     "(" : ")",

@@ -1,12 +1,11 @@
 "use strict";
 
-export class View {
+export class Display {
 
-  constructor(elem, attribute, viewType = "value") {
+  constructor(args) {
 
-    this.linkedAttribute = attribute;
-    this.elem = elem;
-    this.viewType = viewType;
+    this.linkedAttribute = args.attribute;
+    this.elem = args.elem;
 
     this.linkedAttribute.linkedViews.push(this);
 

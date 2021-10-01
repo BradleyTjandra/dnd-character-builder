@@ -1,6 +1,8 @@
 "use strict";
 
-import {Views} from "../view/Views.js"
+import Views from "../view/Views.js"
+import Attributes from "../attributes/Attributes.js";
+import Links from "../links/Links.js"
 
 export class Controller {
   
@@ -14,7 +16,7 @@ export class Controller {
     this.attributes.loadAttributes();
     this.attributes.createAttributesList();
     
-    this.effects = new Effects(this.attributes);
+    this.effects = new Links(this.attributes);
     this.effects.loadSaveInfo();
     this.setupEffectsBetweenAttributes();
 

@@ -1,6 +1,8 @@
 "use strict";
 
-class Effects {
+import Link from "./Link.js";
+
+export default class Links {
 
   constructor(attributes) {
 
@@ -21,7 +23,7 @@ class Effects {
 
     let name = this.generateUniqueID();
 
-    let effect = new Effect(this.attributes, source);
+    let effect = new Link(this.attributes, source);
     effect.setDetails(name, attribute, effectInfo, effectType);
 
     this.effectsList[name] = effect;
@@ -70,7 +72,7 @@ class Effects {
 
     for (let effectData of effects) {
 
-      let effect = new Effect(this.attributes, "user");
+      let effect = new Link(this.attributes, "user");
       effect.setDetails(effectData.name, 
         effectData.attribute, 
         effectData.effectInfo, 

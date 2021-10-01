@@ -1,12 +1,10 @@
 "use strict";
 
-
 export function add(parent) {
   let effectElem = addElem.call(this,parent);
   let effect = this.controller.effects.add(undefined, undefined, "user", "calculated");
   addListeners.call(this,effectElem, effect);
 }
-
 
 export function addListeners(div, effect) {
 
