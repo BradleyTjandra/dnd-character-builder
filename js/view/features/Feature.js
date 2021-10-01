@@ -34,8 +34,9 @@ function addFeatureEffect(views) {
 
   // create an effect for a text description of the feature
   let featureDescriptions = views.controller.attributes.get("all-features-descriptions");
-  let featDescEffect = views.controller.effects.add(featureDescriptions, undefined, "user");
-  return(featDescEffect);
+  let effect = views.controller.effects.add(featureDescriptions, undefined, "user");
+  effect.effectInfo = {'name':'','description':''};
+  return(effect);
 
 }
 

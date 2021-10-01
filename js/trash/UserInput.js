@@ -1,6 +1,6 @@
 "use strict";
 
-import { View } from "./View.js";
+import { View } from "../view/View.js";
 
 export class UserInput extend View {
 

@@ -1,15 +1,23 @@
 "use strict";
 
-export function addFeatureGroup(e) {
+// export function addFeatureGroup(e) {
   
-  let classGroupingElem = e.target.closest("div[data-feature='character-component']");
-  let featureGroup = this.addFeatureGroupElem(classGroupingElem);
+//   let classGroupingElem = e.target.closest("div[data-feature='character-component']");
+//   let featureGroup = this.addFeatureGroupElem(classGroupingElem);
+//   let effect = this.addFeatureGroupEffect(featureGroup);
+//   this.addFeatureGroupListeners(featureGroup, effect);
+  
+// }
+
+export function add(elem) {
+
+  let featureGroup = this.addFeatureGroupElem(elem);
   let effect = this.addFeatureGroupEffect(featureGroup);
-  this.setupFeatureGroupListeners(featureGroup, effect);
-  
+  this.addFeatureGroupListeners(featureGroup, effect);
+
 }
 
-function addFeatureGroupEffect(elem) {
+export function addEffect(elem) {
 
   let featureType = elem.dataset.featureType;
   let effect = this.controller.effects.add(featureType+"-name", "", "user", "fixed");
@@ -17,16 +25,16 @@ function addFeatureGroupEffect(elem) {
 
 }
 
-function addFeatureGroupElem(characterComponentElem) {
+export function addElem(elem) {
 
   let classElem = document.getElementById("hidden-all-feature").cloneNode(true);
   classElem.hidden = false;
   classElem.removeAttribute("id");
 
-  let parentElem = characterComponentElem.closest("[data-feature-type]");
+  let parentElem = elem.closest("[data-feature-type]");
   classElem.dataset.featureType = parentElem.dataset.featureType;
 
-  let addClassButton = characterComponentElem.querySelector("input[data-input='add-feature-group']");
+  let addClassButton = elem.querySelector("input[data-input='add-feature-group']");
   if (addClassButton) addClassButton.before(classElem);
   else parentElem.append(classElem);
   
@@ -34,7 +42,7 @@ function addFeatureGroupElem(characterComponentElem) {
   
 }
 
-function setupFeatureGroupListeners(elem, effect) {
+export function addListeners(elem, effect) {
 
   elem.dataset.effectId = effect.name;
   this.effectTree.addNode(elem.dataset.featureType, effect.name, "feature-grouping");

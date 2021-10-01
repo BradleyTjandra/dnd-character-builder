@@ -1,6 +1,6 @@
 "use strict";
 
-import {Views} from "./Views.js"
+import {Views} from "../view/Views.js"
 
 export class Controller {
   

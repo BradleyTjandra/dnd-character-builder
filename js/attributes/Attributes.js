@@ -30,6 +30,7 @@ class Attributes {
     this.createAbilityScoreAttributes(value => value+"mod", "calculated");
     this.createAbilityScoreAttributes(value => value+"save", "calculated");
 
+    this.add("name", "fixed");
     this.add("all-features-descriptions", "concat");
     this.add("speed", "calculated");
     this.add("languages", "concat");

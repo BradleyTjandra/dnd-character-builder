@@ -1,17 +1,14 @@
 "use strict";
 
 
-function addEffect(e) {
-
-  let effectsElem = e.target.closest("div[data-feature='effect-all']");
-  let effectElem = this.addEffectElem(effectsElem);
+export function add(parent) {
+  let effectElem = addEffectElem.call(this,parent);
   let effect = this.controller.effects.add(undefined, undefined, "user", "calculated");
-  this.setupEffectListeners(effectElem, effect);
-
+  addEffectListeners.call(this,effectElem, effect);
 }
 
 
-function setupEffectListeners(div, effect) {
+function addEffectListeners(div, effect) {
 
   if (div.dataset?.feature != "effect") return;
   
