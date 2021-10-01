@@ -63,12 +63,12 @@ class Attributes {
 
   add(name, calcType, overwrite = false) {
 
-    if (name in this.attributeList && !overwrite) return false;
+    if (name in this.attributeList && !overwrite) {
+      return(this.attributeList[name]);
+    }
 
     let attribute = new Attribute(name, calcType);
-
     this.attributeList[name] = attribute;
-
     return (attribute);
 
   }

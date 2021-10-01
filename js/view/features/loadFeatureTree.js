@@ -8,13 +8,14 @@ export function loadFeatureTree(tree) {
   let stem = processNode(Object.entries(tree)[0]);
 
   if (isEmptyObj(stem.children)) return;
-  stem.children.forEach(loadStemChildren.bind(this));
+  stem.children.forEach(loadCharacterComponent.bind(this));
 
 }
 
 function processNode(node) {
   let [key, children] = node;
   let [effectName, type] = key.split(",");
+
   return ({
     "children" : Object.entries(children),
     "effectName" : effectName,
@@ -22,11 +23,11 @@ function processNode(node) {
   })
 }
 
-function loadStemChildren(child) {
-  let node = processNode(child);
-  if (isEmptyObj(node)) return;
-  node.children.forEach(loadCharacterComponent.bind(this));
-}
+// function loadStemChildren(child) {
+//   let node = processNode(child);
+//   if (isEmptyObj(node)) return;
+//   node.children.forEach(loadCharacterComponent.bind(this));
+// }
 
 function loadCharacterComponent(child) {
   let node = processNode(child);
@@ -41,7 +42,7 @@ function loadFeatureGrouping(elem, child) {
   let node = processNode(child);
   let childElem = this.addFeatureGroupElem(elem);
   let effect = this.controller.effects.get(node.effectName);
-  this.setupFeatureGroupListeners(childElem, effect); 
+  this.addFeatureGroupListeners(childElem, effect); 
   let featureGroupName = childElem.querySelector(
     "input[data-feature='feature-group-name']"
   );

@@ -4,6 +4,7 @@ import { View } from "./View.js";
 import { linkBaseAbilityScores, linkTotalAbilityScores, linkSavingThrows } 
   from "./setup/AbilityScores.js";
 import { linkSkills } from "./setup/Skills.js";
+import linkCharacterInfo from "./setup/linkCharacterInfo.js";
 import { linkOtherAttributes } from "./setup/OtherAttributes.js";
 import { linkHP } from "./setup/HP.js";
 import { onClickFeatureList } from "./features/onClickFeatureList.js";
@@ -20,6 +21,7 @@ export class Views {
 
   setup() {
     
+    linkCharacterInfo.call(this);
     linkBaseAbilityScores(this, this.controller.attributes);
     linkTotalAbilityScores(this, this.controller.attributes);
     linkSavingThrows(this, this.controller.attributes);
@@ -51,7 +53,6 @@ export class Views {
   loadSaveInfo() {
     
     let characterSheetData = JSON.parse(localStorage.getItem("characterSheet"));
-    if (!characterSheetData) return;
     let featuresTree = characterSheetData?.featuresTree;
     
     // if there was no race or background in the saved info, we load elems for them here

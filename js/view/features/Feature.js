@@ -1,16 +1,15 @@
 "use strict";
 
-export function addFeature(e, views) {
+export function add(parent) {
 
-  let parent = e.target.closest("div[data-feature='all-feature']");
-  let elem = addFeatureElem(parent);
-  let effect = addFeatureEffect(views);
-  views.effectTree.addNode(elem.dataset.featureType, effect.name, "feature");
-  addFeatureListeners(elem, effect, views);
+  let elem = addElem.call(this, parent);
+  let effect = addEffect.call(this, views);
+  this.effectTree.addNode(elem.dataset.featureType, effect.name, "feature");
+  addListeners.call(this, elem, effect, views);
 
 }
 
-function addFeatureElem(featureGroupingElem) {
+function addElem(featureGroupingElem) {
 
   // Create new feature div
   let featureElem = document.getElementById("hidden-feature").cloneNode(true);
@@ -30,17 +29,17 @@ function addFeatureElem(featureGroupingElem) {
 
 }
 
-function addFeatureEffect(views) {
+function addEffect() {
 
   // create an effect for a text description of the feature
-  let featureDescriptions = views.controller.attributes.get("all-features-descriptions");
-  let effect = views.controller.effects.add(featureDescriptions, undefined, "user");
+  let featureDescriptions = this.controller.attributes.get("all-features-descriptions");
+  let effect = this.controller.effects.add(featureDescriptions, undefined, "user");
   effect.effectInfo = {'name':'','description':''};
   return(effect);
 
 }
 
-function addFeatureListeners(featureElem, effect) {
+function addListeners(featureElem, effect) {
 
   featureElem.dataset.effectId = effect.name;
 
@@ -65,8 +64,8 @@ function addFeatureListeners(featureElem, effect) {
   deleteFeature.addEventListener("click", e => {
     if (featureElem.hidden) return;
     featureElem.remove();
-    views.controller.effects.removeEffect(effect);
-    views.effectTree.removeNode(effect.name);
+    this.controller.effects.removeEffect(effect);
+    this.effectTree.removeNode(effect.name);
   })
 
 }

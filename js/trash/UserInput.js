@@ -128,27 +128,27 @@ export class UserInput extend View {
   loadSaveInfo() {
 
     
-    let characterSheetData = JSON.parse(localStorage.getItem("characterSheet"));
-    if (!characterSheetData) return;
-    let featuresTree = characterSheetData?.featuresTree;
+    // let characterSheetData = JSON.parse(localStorage.getItem("characterSheet"));
+    // if (!characterSheetData) return;
+    // let featuresTree = characterSheetData?.featuresTree;
     
-    // if there was no race or background in the saved info, we load elems for them here
-    for (let component of ["race", "background"]) {
+    // // if there was no race or background in the saved info, we load elems for them here
+    // for (let component of ["race", "background"]) {
 
-      if (featuresTree != undefined) {
-        if (!this.isEmptyObj(featuresTree["stem,stem"][component+",character-component"])) continue;
-      }
+    //   if (featuresTree != undefined) {
+    //     if (!this.isEmptyObj(featuresTree["stem,stem"][component+",character-component"])) continue;
+    //   }
 
-      let characterComponentElem = document.querySelector(`div[data-feature='character-component'][data-feature-type='${component}']`);
-      let featureGroupElem  = this.addFeatureGroupElem(characterComponentElem);
-      let effect = this.addFeatureGroupEffect(featureGroupElem);
-      this.setupFeatureGroupListeners(featureGroupElem, effect);
+    //   let characterComponentElem = document.querySelector(`div[data-feature='character-component'][data-feature-type='${component}']`);
+    //   let featureGroupElem  = this.addFeatureGroupElem(characterComponentElem);
+    //   let effect = this.addFeatureGroupEffect(featureGroupElem);
+    //   this.setupFeatureGroupListeners(featureGroupElem, effect);
 
-    }
+    // }
     
-    if (featuresTree) this.loadFeatureTreeNode(document, Object.entries(featuresTree)[0]);
+    // if (featuresTree) this.loadFeatureTreeNode(document, Object.entries(featuresTree)[0]);
 
-    window.scrollTo(0, 0);
+    // window.scrollTo(0, 0);
 
   }
 

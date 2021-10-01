@@ -4,7 +4,6 @@ export class View {
 
   constructor(elem, attribute, viewType = "value") {
 
-    // this.controller = controller;
     this.linkedAttribute = attribute;
     this.elem = elem;
     this.viewType = viewType;

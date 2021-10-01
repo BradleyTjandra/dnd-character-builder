@@ -4,7 +4,11 @@ import { Controller } from "./controller/Controller.js"
 
 let controller = new Controller();
 
-window.addEventListener("unload", controller.saveInfo());
+
+// window.addEventListener("beforeunload", controller.saveInfo);
+
+let saveInfoHandler = function() { controller.saveInfo(); };
+window.addEventListener("beforeunload", saveInfoHandler);
 
 // This is apparently bad practice, so I will remove this
 // once we launch
@@ -15,6 +19,6 @@ let deleteButton = document.getElementById("big-red-delete");
 deleteButton.onclick = function(e) {
   let result = confirm("This will clear the cache - are you sure?");
   if (!result) return;
-  window.removeEventListener("unload", controller.saveInfo);
+  window.removeEventListener("beforeunload", saveInfoHandler);
   localStorage.removeItem("characterSheet");
 }

@@ -1,27 +1,11 @@
 "use strict";
 
-// export function addFeatureGroup(e) {
-  
-//   let classGroupingElem = e.target.closest("div[data-feature='character-component']");
-//   let featureGroup = this.addFeatureGroupElem(classGroupingElem);
-//   let effect = this.addFeatureGroupEffect(featureGroup);
-//   this.addFeatureGroupListeners(featureGroup, effect);
-  
-// }
 
 export function add(elem) {
 
-  let featureGroup = this.addFeatureGroupElem(elem);
-  let effect = this.addFeatureGroupEffect(featureGroup);
-  this.addFeatureGroupListeners(featureGroup, effect);
-
-}
-
-export function addEffect(elem) {
-
-  let featureType = elem.dataset.featureType;
-  let effect = this.controller.effects.add(featureType+"-name", "", "user", "fixed");
-  return(effect);
+  let featureGroup = addElem.call(this,elem);
+  let effect = addEffect.call(this,featureGroup);
+  addListeners.call(this,featureGroup, effect);
 
 }
 
@@ -42,12 +26,19 @@ export function addElem(elem) {
   
 }
 
+export function addEffect(elem) {
+
+  let featureType = elem.dataset.featureType;
+  let effect = this.controller.effects.add(featureType+"-name", "", "user", "fixed");
+  return(effect);
+
+}
+
 export function addListeners(elem, effect) {
 
   elem.dataset.effectId = effect.name;
   this.effectTree.addNode(elem.dataset.featureType, effect.name, "feature-grouping");
   let featureGroupElem = elem.querySelector("input[data-feature='feature-group-name']");
   featureGroupElem.addEventListener("input", e => effect.effectInfo = e.target.value);
-
 
 }
