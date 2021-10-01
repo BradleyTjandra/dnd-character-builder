@@ -16,12 +16,23 @@ export function addListeners(div, effect) {
 
   let effectAttr = div.querySelector("input[data-effect='effect-attribute']");
   effectAttr.addEventListener("input", e => {
-    effect.attribute = e.target.value;
-    if (e.target.value == "hp") {
-      effect.effectType = "calculated resource-total";
+    if (/^count(\d+)$/.test(e.target.value)) {
+
+      let counterId = e.target.value
+      if (counterId != effect.effectInfo?.counterId) {
+        effect.effectInfo = {"featureSource" : parentEffect};
+      }
+      effect.attribute = parentEffect;
+      effect.setEffectInfoByKey("counterId", counterId);
+      
     } else {
-      effect.effectType = "calculated"
-    };
+      effect.attribute = e.target.value;
+      if (e.target.value == "hp") {
+        effect.effectType = "calculated resource-total";
+      } else {
+        effect.effectType = "calculated"
+      };
+    }
   });
 
   let effectCalc = div.querySelector("input[data-effect='effect-calculation']");

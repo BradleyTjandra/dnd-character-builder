@@ -87,6 +87,13 @@ export default class Link {
     return(this._effectInfo['data']);
   }
 
+  setEffectInfoByKey(key, info) {
+    this.effectInfo = Object.assign(
+      this.effectInfo,
+      {[key] : info}
+    );
+  }
+
   set attribute(newAttribute) {
 
     if (!newAttribute) return;
@@ -142,7 +149,6 @@ export default class Link {
         "name" : this.name,
         "attribute" : this.attribute.name,
         "effectInfo" : this.effectInfo,
-        // "source" : this.source?.name ?? this.source
         "effectType" : this.effectType,
         
       }
