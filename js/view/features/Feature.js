@@ -3,13 +3,13 @@
 export function add(parent) {
 
   let elem = addElem.call(this, parent);
-  let effect = addEffect.call(this, views);
-  this.effectTree.addNode(elem.dataset.featureType, effect.name, "feature");
-  addListeners.call(this, elem, effect, views);
+  let effect = addEffect.call(this);
+  this.effectTree.addNode(parent.dataset.effectId, effect.name, "feature");
+  addListeners.call(this, elem, effect);
 
 }
 
-function addElem(featureGroupingElem) {
+export function addElem(featureGroupingElem) {
 
   // Create new feature div
   let featureElem = document.getElementById("hidden-feature").cloneNode(true);
@@ -29,7 +29,7 @@ function addElem(featureGroupingElem) {
 
 }
 
-function addEffect() {
+export function addEffect() {
 
   // create an effect for a text description of the feature
   let featureDescriptions = this.controller.attributes.get("all-features-descriptions");
@@ -39,7 +39,7 @@ function addEffect() {
 
 }
 
-function addListeners(featureElem, effect) {
+export function addListeners(featureElem, effect) {
 
   featureElem.dataset.effectId = effect.name;
 

@@ -10,6 +10,8 @@ import { linkHP } from "./setup/HP.js";
 import { onClickFeatureList } from "./features/onClickFeatureList.js";
 import { loadFeatureTree } from "./features/loadFeatureTree.js";
 import * as featureGroup from "./features/FeatureGroup.js";
+import * as feature from "./features/Feature.js";
+import * as effect from "./features/Effect.js";
 import isEmptyObj from "../helpers/isEmptyObj.js";
 
 export class Views {
@@ -86,6 +88,14 @@ export class Views {
 Views.prototype.addFeatureGroupElem = binder(featureGroup.addElem);
 Views.prototype.addFeatureGroupEffect = binder(featureGroup.addEffect);
 Views.prototype.addFeatureGroupListeners = binder(featureGroup.addListeners);
+
+Views.prototype.addFeatureElem = binder(feature.addElem);
+Views.prototype.addFeatureEffect = binder(feature.addEffect);
+Views.prototype.addFeatureListeners = binder(feature.addListeners);
+
+Views.prototype.addEffectElem = binder(effect.addElem);
+Views.prototype.addEffectEffect = binder(effect.addEffect);
+Views.prototype.addEffectListeners = binder(effect.addListeners);
 
 function binder(func) {
   return(function(...args) {

@@ -2,13 +2,13 @@
 
 
 export function add(parent) {
-  let effectElem = addEffectElem.call(this,parent);
+  let effectElem = addElem.call(this,parent);
   let effect = this.controller.effects.add(undefined, undefined, "user", "calculated");
-  addEffectListeners.call(this,effectElem, effect);
+  addListeners.call(this,effectElem, effect);
 }
 
 
-function addEffectListeners(div, effect) {
+export function addListeners(div, effect) {
 
   if (div.dataset?.feature != "effect") return;
   
@@ -38,7 +38,7 @@ function addEffectListeners(div, effect) {
 
 }
 
-function addEffectElem(effectsElem) {
+export function addElem(effectsElem) {
 
   let effectElem = document.getElementById("hidden-effect").cloneNode(true);
   effectElem.hidden = false;

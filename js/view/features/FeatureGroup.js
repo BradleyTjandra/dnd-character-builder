@@ -5,7 +5,7 @@ export function add(elem) {
 
   let featureGroup = addElem.call(this,elem);
   let effect = addEffect.call(this,featureGroup);
-  addListeners.call(this,featureGroup, effect);
+  addListeners.call(this, featureGroup, effect);
 
 }
 

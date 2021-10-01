@@ -11,8 +11,8 @@ export function onClickFeatureList(event) {
 
   if (button.dataset.input == "add-feature") {
     
-    let elem = e.target.closest("div[data-feature='all-feature']");
-    addFeature.call(this, event);
+    let elem = event.target.closest("div[data-feature='all-feature']");
+    addFeature.call(this, elem);
 
   } else if (button.dataset.input == "add-effect") {
     
@@ -22,7 +22,7 @@ export function onClickFeatureList(event) {
   } else if (button.dataset.input == "add-feature-group") {
     
     let elem = event.target.closest("div[data-feature='character-component']")
-    addFeatureGroup(elem);
+    addFeatureGroup.call(this, elem);
 
   }
 

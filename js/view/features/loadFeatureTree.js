@@ -23,12 +23,6 @@ function processNode(node) {
   })
 }
 
-// function loadStemChildren(child) {
-//   let node = processNode(child);
-//   if (isEmptyObj(node)) return;
-//   node.children.forEach(loadCharacterComponent.bind(this));
-// }
-
 function loadCharacterComponent(child) {
   let node = processNode(child);
   let featureList  = document.getElementById("feature-list");
@@ -62,7 +56,7 @@ function loadFeature(elem, child) {
   let childElem = this.addFeatureElem(elem);
 
   // link feature elements to effect
-  this.effectTree.addNode(childElem.dataset.featureType, effect.name, "feature");
+  this.effectTree.addNode(elem.dataset.effectId, effect.name, "feature");
   this.addFeatureListeners(childElem, effect);
 
   // refresh values from effect info
@@ -88,7 +82,7 @@ function loadEffect(elem, child) {
   let childElem = this.addEffectElem(effectsElem);
 
   // link effect elements to effect
-  this.setupEffectListeners(childElem, effect);
+  this.addEffectListeners(childElem, effect);
 
   // refresh values from effect info
   childElem.querySelector("input[data-effect='effect-attribute']").value 
