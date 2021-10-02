@@ -78,10 +78,7 @@ function loadEffect(elem, child) {
   if (!effect) return;
 
   // add effect elements
-  let effectsElem = elem.querySelector("div[data-feature='feature']");
-  let childElem = this.addEffectElem(effectsElem);
-
-  // link effect elements to effect
+  let childElem = this.addEffectElem(elem);
   this.addEffectListeners(childElem, effect);
 
   // refresh values from effect info
@@ -90,66 +87,3 @@ function loadEffect(elem, child) {
   childElem.querySelector("input[data-effect='effect-calculation']").value 
     = effect.effectInfo.calculation;
 }
-
-// loadFeatureTreeNode(elem, node) {
-
-//   let [key, children] = node;
-//   let [effectName, type] = key.split(",");
-//   let childrenElem;
-
-//   if (type == "stem") {
-
-//     childrenElem = elem.getElementById("feature-list");
-
-//   } else if (type == "character-component") {
-
-//     childrenElem = elem.querySelector(`div[data-feature='character-component'][data-feature-type='${effectName}']`);
-
-//   } else if (type == "feature-grouping") {
-
-//     let childrenElem = this.addFeatureGroupElem(elem);
-//     let effect = this.controller.effects.get(effectName);
-//     this.setupFeatureGroupListeners(childrenElem, effect);
-//     childrenElem.querySelector("input[data-feature='feature-group-name']").value = effect.effectInfo;
-    
-//   } else if (type == "feature") {
-
-//     // make sure this links to a valid effect
-//     let effect = this.controller.effects.get(effectName);
-//     if (!effect) return;
-
-//     // add feature elements
-//     childrenElem = this.addFeatureElem(elem);
-
-//     // link feature elements to effect
-//     this.effectTree.addNode(childrenElem.dataset.featureType, effect.name, "feature");
-//     this.addFeatureListeners(childrenElem, effect);
-
-//     // refresh values from effect info
-//     childrenElem.querySelector("input[data-feature='feature-name']").value = effect.effectInfo.name;
-//     childrenElem.querySelector("textarea[data-feature='feature-description']").value = effect.effectInfo.description;
-
-//   } else if (type == "effect") {
-
-//     // make sure this links to a valid effect
-//     let effect = this.controller.effects.get(effectName);
-//     if (!effect) return;
-
-//     // add effect elements
-//     let effectsElem = elem.querySelector("div[data-feature='feature']");
-//     let childrenElem = this.addEffectElem(effectsElem);
-
-//     // link effect elements to effect
-//     this.setupEffectListeners(childrenElem, effect);
-
-//     // refresh values from effect info
-//     childrenElem.querySelector("input[data-effect='effect-attribute']").value = effect.attribute.name;
-//     childrenElem.querySelector("input[data-effect='effect-calculation']").value = effect.effectInfo;
-
-//   }
-
-//   if (isEmptyObj(children)) return;
-
-//   Object.entries(children).forEach( child => this.loadFeatureTreeNode(childrenElem, child) );
-  
-// }

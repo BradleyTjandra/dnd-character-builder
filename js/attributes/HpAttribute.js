@@ -2,11 +2,12 @@
 
 import Attribute from "./Attribute.js";
 import sumOver from "../helpers/sumOver.js";
+import { AttributeTypes } from "./Attributes.js";
 
 export default class HpAttribute extends Attribute {
 
   constructor(name) {
-    super(name, "fixed");
+    super(name, AttributeTypes.RESOURCE);
     this.value = {"current" : 0, "total": 0};
   }
 
