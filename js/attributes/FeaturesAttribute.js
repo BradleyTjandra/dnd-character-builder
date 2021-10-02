@@ -12,6 +12,7 @@ export default class FeaturesAttribute extends Attribute {
 
   calculate() {
     this.reset();
+    console.log("yarp!");
     this.inputs.sort(orderInputs).forEach(this.processInput.bind(this));
     this.triggerListeners();
   }

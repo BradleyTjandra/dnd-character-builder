@@ -83,7 +83,7 @@ export default class Attributes {
         break;
 
     }
-    // if (name == "feature-group-descriptions") {
+    // if (name == "features-list") {
     //   return(this.addFeaturesAttribute());
     // }
 
@@ -95,7 +95,7 @@ export default class Attributes {
   }
 
   // addFeaturesAttribute() {
-  //   let name = "feature-group-descriptions";
+  //   let name = "features-list";
   //   if (name in this.attributeList) {
   //     return(this.attributeList[name]);
   //   }

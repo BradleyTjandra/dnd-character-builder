@@ -78,7 +78,7 @@ function setAsCounterEffect(effect, elem) {
   let nameVal = nameElem.value;
 
   if (effect.name != nameVal) {
-    effect.attribute = "feature-group-descriptions";
+    effect.attribute = "features-list";
   }
 
   let colonIdx = nameVal.search(":");

@@ -2,7 +2,7 @@
 
 import { Display } from "./Display.js";
 import createFromTemplate from "../../helpers/createFromTemplate.js";
-import isEmptyObj from "../../helpers/isEmptyObj.js";
+// import isEmptyObj from "../../helpers/isEmptyObj.js";
 
 export default class FeaturesDisplay extends Display {
 
@@ -19,10 +19,10 @@ export default class FeaturesDisplay extends Display {
       return;
     }
 
-    if (isEmptyObj(featuresData.rowId)) {
-      this.elem.innerHTML = "";
-      return;
-    }
+    // if (isEmptyObj(featuresData.rowId)) {
+    //   this.elem.innerHTML = "";
+    //   return;
+    // }
 
     for (let rowId of featuresData.rowId) {
 

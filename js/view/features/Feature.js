@@ -33,7 +33,7 @@ export function addElem(featureGroupingElem) {
 export function addEffect() {
 
   // create an effect for a text description of the feature
-  let featureDescriptions = this.controller.attributes.get("feature-group-descriptions");
+  let featureDescriptions = this.controller.attributes.get("features-list");
   let effect = this.controller.effects.add(featureDescriptions, undefined, "user");
   effect.effectInfo = {'name':'','description':'', featureSource: "self"};
   return(effect);

@@ -24,7 +24,7 @@ export function addElem(parent) {
 export function addEffect() {
 
   // create an effect for a text description of the feature
-  let attribute = this.controller.attributes.get("feature-group-descriptions");
+  let attribute = this.controller.attributes.get("features-list");
   let effect = this.controller.effects.add(attribute, undefined, "user");
   effect.effectInfo = {'name':'','description':'', featureSource: "self"};
   return(effect);
