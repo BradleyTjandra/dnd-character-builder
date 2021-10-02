@@ -34,7 +34,8 @@ export default class Attributes {
     this.createAbilityScoreAttributes(value => value+"save", "calculated");
 
     this.add("name", "fixed");
-    this.addFeaturesAttribute();
+    this.add("features-list", "features");
+    // this.addFeaturesAttribute();
     this.add("speed", "calculated");
     this.add("languages", "concat");
 
@@ -65,32 +66,45 @@ export default class Attributes {
   }
 
   add(name, calcType, overwrite = false) {
-
-    if (name == "feature-group-descriptions") {
-      return(this.addFeaturesAttribute());
-    }
-
+    
     if (name in this.attributeList && !overwrite) {
       return(this.attributeList[name]);
     }
 
-    let attribute = new Attribute(name, calcType);
-    this.attributeList[name] = attribute;
-    return (attribute);
+    let attribute;
+    switch (calcType) {
 
-  }
+      case "features":
+        attribute = new FeaturesAttribute(name);
+        break;
 
-  addFeaturesAttribute() {
-    let name = "feature-group-descriptions";
-    if (name in this.attributeList) {
-      return(this.attributeList[name]);
+      default:
+        attribute = new Attribute(name, calcType);
+        break;
+
     }
+    // if (name == "feature-group-descriptions") {
+    //   return(this.addFeaturesAttribute());
+    // }
 
-    let attribute = new FeaturesAttribute(name);
+
+    // let attribute = new Attribute(name, calcType);
     this.attributeList[name] = attribute;
     return (attribute);
 
   }
+
+  // addFeaturesAttribute() {
+  //   let name = "feature-group-descriptions";
+  //   if (name in this.attributeList) {
+  //     return(this.attributeList[name]);
+  //   }
+
+  //   let attribute = new FeaturesAttribute(name);
+  //   this.attributeList[name] = attribute;
+  //   return (attribute);
+
+  // }
 
   createSkill(skill) {
 

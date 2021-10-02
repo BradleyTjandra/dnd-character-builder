@@ -4,16 +4,16 @@ import createFromTemplate from "../../helpers/createFromTemplate.js";
 import { linkType } from "../../links/Link.js";
 
 export function add(parent) {
-  let effectElem = addElem.call(this, parent);
+  let effectElem = addElem(parent);
   let effect = this.controller.effects.add(undefined, undefined, "user", "calculated");
   addListeners.call(this, effectElem, effect);
 }
 
-export function addElem(effectsElem) {
+export function addElem(parent) {
 
   let effectElem = createFromTemplate("template-effect");
 
-  let addEffectElem = effectsElem
+  let addEffectElem = parent
     .querySelector("input[data-input='add-effect']")
     .parentNode;
     addEffectElem.before(effectElem);
@@ -74,7 +74,7 @@ function setAsCounterEffect(effect, elem) {
 
   let nameElem = elem.querySelector("input[data-effect='effect-attribute']");
   let calcElem = elem.querySelector("input[data-effect='effect-calculation']");
-  let featureElem = elem.closest("[data-feature='feature-all']");
+  let featureElem = elem.closest("[data-feature='feature']");
   let nameVal = nameElem.value;
 
   if (effect.name != nameVal) {
