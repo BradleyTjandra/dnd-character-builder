@@ -6,13 +6,12 @@ import mergeObjs from "../helpers/mergeObjs.js";
 export default class FeaturesAttribute extends Attribute {
 
   constructor(name) {
-    super(name, "fixed");
+    super(name, "features");
     this.reset();
   }
 
   calculate() {
     this.reset();
-    console.log("yarp!");
     this.inputs.sort(orderInputs).forEach(this.processInput.bind(this));
     this.triggerListeners();
   }
@@ -62,7 +61,6 @@ export default class FeaturesAttribute extends Attribute {
       this.value?.counterCurrent,
       this.oldCounterCurrent,
     );
-    // console.log(this.oldCounterCurrent);
     this.value = {
       "rowId" : new Set(),
       "name" : {},

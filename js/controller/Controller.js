@@ -15,7 +15,7 @@ export class Controller {
     this.attributes = new Attributes();
     this.attributes.loadAttributes();
     this.attributes.createAttributesList();
-    
+
     this.effects = new Links(this.attributes);
     this.effects.loadSaveInfo();
     this.setupEffectsBetweenAttributes();
@@ -23,7 +23,7 @@ export class Controller {
     this.views = new Views(this);
     this.views.setup();
     this.views.loadSaveInfo();
-    this.views.refreshViews();
+    // this.views.refreshViews();
 
   }
 

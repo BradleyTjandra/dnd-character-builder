@@ -28,7 +28,6 @@ export class Display {
       if (value == 0) return;
       this.elem.innerHTML = value.reduce( (accumulator, item) => {
         if (!item) return accumulator;
-        if(item['description'] == undefined) console.log(item);
         if (item["name"].replace(" ", "") == "" && item["description"].replace(" ", "") == "") {
           return(`${accumulator}<div></div>`);
         }

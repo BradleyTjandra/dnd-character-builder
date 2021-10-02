@@ -11,18 +11,11 @@ export default class FeaturesDisplay extends Display {
     if (featuresData == 0) return;
 
     let table = document.createElement("table");
-
-    console.log(featuresData);
     
     if (!featuresData.rowId) {
       this.elem.innerHTML = "";
       return;
     }
-
-    // if (isEmptyObj(featuresData.rowId)) {
-    //   this.elem.innerHTML = "";
-    //   return;
-    // }
 
     for (let rowId of featuresData.rowId) {
 

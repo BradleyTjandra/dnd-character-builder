@@ -83,12 +83,7 @@ export default class Attributes {
         break;
 
     }
-    // if (name == "features-list") {
-    //   return(this.addFeaturesAttribute());
-    // }
-
-
-    // let attribute = new Attribute(name, calcType);
+    
     this.attributeList[name] = attribute;
     return (attribute);
 

@@ -6,8 +6,6 @@ localStorage.removeItem("characterSheet");
 
 let controller = new Controller();
 
-// window.addEventListener("beforeunload", controller.saveInfo);
-
 let saveInfoHandler = function() { controller.saveInfo(); };
 window.addEventListener("beforeunload", saveInfoHandler);
 
