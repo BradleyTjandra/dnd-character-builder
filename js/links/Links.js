@@ -1,6 +1,6 @@
 "use strict";
 
-import Link from "./Link.js";
+import { Link, linkType } from "./Link.js";
 
 export default class Links {
 
@@ -19,12 +19,27 @@ export default class Links {
 
   }
 
-  add(attribute, effectInfo, source, effectType = "fixed") {
+  add(attribute, effectInfo, source, effectType = linkType.FIXED) {
 
     let name = this.generateUniqueID();
 
     let effect = new Link(this.attributes, source);
-    effect.setDetails(name, attribute, effectInfo, effectType);
+
+    effect.name = name;
+    effect.attribute = attribute;
+    effect.effectType = effectType;
+
+    if (typeof effectInfo === "string") {
+      if (effectType == linkType.FIXED) {
+        effect.effectInfo = {"value" : effectInfo};
+      } else if (effectType == linkType.CALCULATED) {
+        effect.effectInfo = {"formula" : effectInfo}
+      } else {
+        new Error(`unknown type: ${effectType}`);
+      }
+    } else {
+      effect.effectInfo = effectInfo;
+    }
 
     this.effectsList[name] = effect;
 

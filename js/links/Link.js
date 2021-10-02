@@ -2,7 +2,12 @@
 
 import Calculation from "./Calculation.js";
 
-export default class Link {
+export const linkType = {
+  FIXED : 'fixed',
+  CALCULATED : 'calculated',
+}
+
+export class Link {
 
   constructor(attributes, source) {
     this.attributes = attributes;
@@ -14,7 +19,7 @@ export default class Link {
     this.name = undefined;
   }
 
-  setDetails(name, attribute, effectInfo, effectType = "fixed") {
+  setDetails(name, attribute, effectInfo, effectType = linkType.CALCULATED) {
 
     this.name = name;
     this.effectType = effectType; 
@@ -36,9 +41,9 @@ export default class Link {
 
     if (!this.isSetup) return undefined;
     
-    if (this.effectType.includes("fixed")) {
+    if (this.effectType.includes(linkType.FIXED)) {
       return this.effectInfo;
-    } else if (this.effectType.includes("calculated")) {
+    } else if (this.effectType.includes(linkType.CALCULATED)) {
       return this.formula.calculate();
     } 
 
@@ -49,27 +54,18 @@ export default class Link {
     if (newInfo == undefined) return;
 
     // update effect info
-    let oldInfo = Object.assign({}, this.effectInfo);
+    let oldInfo = Object.assign({}, this._effectInfo['data']);
     if (oldInfo == newInfo) return;
     this._effectInfo['data'] = newInfo;
-
-    // recreate the supporting information
-    if (this.effectType.includes("calculated")) {
-
-      let formulaText;
-      if (newInfo[0] == "+" || newInfo[0] == "-")  {
-        formulaText = "0" + newInfo;
-      } else {
-        formulaText = newInfo;
-      }
-      this.formula = new Calculation(formulaText, this.attributes, this);
-      this.inputs = Array.from(this.formula.getInputs());
-      this._effectInfo["valid"] = this.formula.getValidity();
-
+    
+    if ("formula" in newInfo) {
+      let calc = this.calculationFromFormulaText(newInfo.formula);
+      this.formula = calc;
+      this._effectInfo["valid"] = calc.getValidity();
+      this.inputs = Array.from(calc.getInputs());
     } else {
-
       this._effectInfo["valid"] = true;
-
+      this.inputs = [];
     }
 
     this.isSetup = (this._effectInfo["valid"] && this._attribute["valid"]);
@@ -87,12 +83,12 @@ export default class Link {
     return(this._effectInfo['data']);
   }
 
-  setEffectInfoByKey(key, info) {
-    this.effectInfo = Object.assign(
-      this.effectInfo,
-      {[key] : info}
-    );
-  }
+  // setEffectInfoByKey(key, info) {
+  //   this.effectInfo = Object.assign(
+  //     this.effectInfo,
+  //     {[key] : info}
+  //   );
+  // }
 
   set attribute(newAttribute) {
 
@@ -127,9 +123,7 @@ export default class Link {
   removeLinks(attribute) {
 
     if (!this.isSetup) return;
-
     if (!attribute) attribute = this.attribute;
-
     attribute.removeInput(this);
     attribute.removeDependent(this);
 
@@ -154,9 +148,17 @@ export default class Link {
       }
     };
 
-
     return(toSave);
-
   }
 
+
+  calculationFromFormulaText(text) {
+    let formulaText;
+    if (text[0] == "+" || text[0] == "-" || /^\s*$/.test(text))  {
+      formulaText = "0" + text;
+    } else {
+      formulaText = text;
+    }
+    return(new Calculation(formulaText, this.attributes, this));
+  }
 }

@@ -40,7 +40,7 @@ function loadFeatureGrouping(elem, child) {
   let featureGroupName = childElem.querySelector(
     "input[data-feature='feature-group-name']"
   );
-  featureGroupName.value = effect.effectInfo;
+  featureGroupName.value = effect.effectInfo.name ?? "";
   let boundLoader = loadFeature.bind(this, childElem);
   node.children.forEach(boundLoader);
 }
@@ -86,9 +86,9 @@ function loadEffect(elem, child) {
 
   // refresh values from effect info
   childElem.querySelector("input[data-effect='effect-attribute']").value 
-    = effect.attribute.name;
+    = effect.effectInfo.name;
   childElem.querySelector("input[data-effect='effect-calculation']").value 
-    = effect.effectInfo;
+    = effect.effectInfo.calculation;
 }
 
 // loadFeatureTreeNode(elem, node) {

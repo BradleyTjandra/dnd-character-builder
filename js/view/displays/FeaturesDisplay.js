@@ -1,6 +1,7 @@
 "use strict";
 
 import { Display } from "./Display.js";
+import createFromTemplate from "../../helpers/createFromTemplate.js";
 
 export default class FeaturesDisplay extends Display {
 
@@ -9,34 +10,102 @@ export default class FeaturesDisplay extends Display {
     if (featuresData == 0) return;
 
     let table = document.createElement("table");
+    
+    if (!featuresData.rowId) {
+      this.elem.innerHTML = "";
+      return;
+    }
 
-    for (let row in featuresData.rowId) {
+    for (let rowId of featuresData.rowId) {
+
+      if (this.hasNoFeats(featuresData, rowId)) continue;
+
       let rowElem = document.createElement("tr");
-      rowElem.dataset.featureSource = row;
+      rowElem.dataset.featureSource = rowId;
       
-      let textTd = document.createElement("td");
-      textTd.innerHTML = `<div>
-        <b><i>
-          ${featuresData.name[rowId] +"." ?? "" }
-        </i></b> 
-        ${featuresData.description[rowId] ?? "" }
-        </div>`;
+      let textTd = this.createTextTd(featuresData, rowId);
       rowElem.append(textTd);
 
-      let counterTd = document.createElement("td");
-      counterTd.innerHTML = "";
+      let counterTd = this.createCounterTd(featuresData, rowId);
+      rowElem.append(counterTd);
+
+      table.append(rowElem);
       
     }
-    
-    
 
-    // this.elem.innerHTML = value.reduce( (accumulator, item) => {
-    //   if (!item) return accumulator;
-    //   if (item["name"].replace(" ", "") == "" && item["description"].replace(" ", "") == "") {
-    //     return(`${accumulator}<div></div>`);
-    //   }
-    //   return(`${accumulator}<div><b><i>${item["name"] +"." ?? "" }</i></b> ${item['description'] ?? "" }</div>`);
-    // }, "");
+    let oldTable = this.elem.firstChild;
+    let hasRows = table.querySelector("tr");
+    
+    // create an empty table with no rows;
+    if (!hasRows) table = document.createElement("table");
+
+    if (!oldTable) this.elem.append(table);
+    else oldTable.replaceWith(table);
+    
+  }
+
+  hasNoFeats(featuresData, rowId) {
+    if (!/^\s*$/.exec(featuresData.name[rowId])) return false;
+    if (!/^\s*$/.exec(featuresData.description[rowId])) return false;
+    if (rowId in featuresData.counterTotal) return false;
+    return true;
+  }
+
+  createTextTd(featuresData, rowId) {
+    let td = document.createElement("td");
+    td.innerHTML = `<div>
+      <b><i>
+        ${featuresData.name[rowId] +"." ?? "" }
+      </i></b> 
+      ${featuresData.description[rowId] ?? "" }
+      </div>`;
+    return(td);
+  }
+
+  createCounterTd(featuresData, rowId) {
+
+    let td = document.createElement("td");
+    
+    if (!(rowId in featuresData.counterTotal)) return td;
+
+    let counters = Object.keys(featuresData.counterTotal[rowId]);
+    
+    for (let counterId of counters) {
+      
+      let counterElem = createFromTemplate("template-counter");
+
+      let div = counterElem.querySelector("div[data-feature='counter']")
+      div.setAttribute("data-counter-id", counterId);
+            
+      let total = featuresData.counterTotal[rowId][counterId];
+      let totalElem = counterElem.querySelector("[data-feature='total']");
+      totalElem.innerHTML = total;
+
+      let nameElem = counterElem.querySelector("[data-feature='name']");
+      nameElem.innerHTML = featuresData.counterName[rowId][counterId];
+
+      let curr = featuresData.counterCurrent[rowId][counterId];
+      let currElem = counterElem.querySelector("[data-feature='current']");
+      currElem.setAttribute("value", curr);
+
+      let incrElem = counterElem.querySelector("input[value='+']");
+      incrElem.addEventListener("click", () => {
+        currElem.setAttribute("value", 
+          ++featuresData.counterCurrent[rowId][counterId]);
+      });
+      
+      let decrElem = counterElem.querySelector("input[value='-']");
+      decrElem.addEventListener("click", () => {
+        currElem.setAttribute("value", 
+          --featuresData.counterCurrent[rowId][counterId]);
+      })
+
+      td.append(counterElem);
+
+    }
+    
+    return(td);
+    
   }
 
 }

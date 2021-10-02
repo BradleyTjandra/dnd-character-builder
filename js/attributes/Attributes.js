@@ -1,10 +1,11 @@
 "use strict";
 
 import Attribute from "./Attribute.js";
+import FeaturesAttribute from "./FeaturesAttribute.js";
+
+let abilityScores = ["str", "dex", "con", "wis", "cha", "int"];
 
 export default class Attributes {
-  
-  abilityScores = ["str", "dex", "con", "wis", "cha", "int"];
 
   constructor() {
     this.attributeList = [];
@@ -33,7 +34,7 @@ export default class Attributes {
     this.createAbilityScoreAttributes(value => value+"save", "calculated");
 
     this.add("name", "fixed");
-    this.add("all-features-descriptions", "concat");
+    this.addFeaturesAttribute();
     this.add("speed", "calculated");
     this.add("languages", "concat");
 
@@ -65,11 +66,27 @@ export default class Attributes {
 
   add(name, calcType, overwrite = false) {
 
+    if (name == "all-features-descriptions") {
+      return(this.addFeaturesAttribute());
+    }
+
     if (name in this.attributeList && !overwrite) {
       return(this.attributeList[name]);
     }
 
     let attribute = new Attribute(name, calcType);
+    this.attributeList[name] = attribute;
+    return (attribute);
+
+  }
+
+  addFeaturesAttribute() {
+    let name = "all-features-descriptions";
+    if (name in this.attributeList) {
+      return(this.attributeList[name]);
+    }
+
+    let attribute = new FeaturesAttribute(name);
     this.attributeList[name] = attribute;
     return (attribute);
 
@@ -85,7 +102,7 @@ export default class Attributes {
 
   createAbilityScoreAttributes(attributeNameTemplate, calcType) {
 
-    this.abilityScores.forEach( (ability) => {
+    abilityScores.forEach( (ability) => {
 
       let attrName = attributeNameTemplate(ability);
       let attr = this.add(attrName, calcType);

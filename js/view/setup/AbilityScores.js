@@ -1,6 +1,6 @@
 "use strict";
 
-let abilityScores = ["str", "dex", "con", "wis", "cha", "int"];
+let abilityScores = ["str", "dex", "con", "int", "wis", "cha", ];
 
 export function linkBaseAbilityScores(views, attributes) {
 

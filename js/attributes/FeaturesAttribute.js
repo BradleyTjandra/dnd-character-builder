@@ -1,107 +1,91 @@
 "use strict";
 
-import Attribute from "./Attribute";
+import Attribute from "./Attribute.js";
+import mergeObjs from "../helpers/mergeObjs.js";
 
 export default class FeaturesAttribute extends Attribute {
 
-  constructor(name, calcType = "fixed") {
+  constructor(name) {
+    super(name, "fixed");
+    this.reset();
+  }
 
-    super(name, calcType);
+  calculate() {
+    this.reset();
+    this.inputs.sort(orderInputs).forEach(this.processInput.bind(this));
+    this.triggerListeners();
+  }
 
+  processInput(input) {
+
+    let inputValue = input.effectInfo;
+    if (!inputValue) return;
+  
+    if (inputValue.featureSource == "self") {
+  
+      let rowId = input.name;
+      this.value["name"][rowId] = inputValue.name;
+      this.value["description"][rowId] = inputValue.description;
+      this.value["rowId"].add(rowId);
+  
+    } else {
+  
+      let rowId = inputValue.featureSource;
+      let counter = inputValue.counter;
+      if (!this.value["counterTotal"].hasOwnProperty(rowId)) {
+        this.value["counterTotal"][rowId] = {};
+        this.value["counterCurrent"][rowId] = {};
+        this.value["counterName"][rowId] = {};
+      }
+      this.value["counterTotal"][rowId][counter] = input.formula.calculate();
+
+      let oldCurr = this.oldCounterCurrent?.[rowId]?.[counter];
+      this.value["counterCurrent"][rowId][counter] = oldCurr ?? 0;
+
+      this.value["counterName"][rowId][counter] = inputValue.counterName;
+  
+    } 
+  }
+
+  setValue(value) {
+    if ("rowId" in value) {
+      value.rowId = new Set(Object.keys(value.rowId));
+    }
+    this.oldCounterCurrent = (value?.counterCurrent) ?? {};
+    super.setValue(value);
+  }
+
+  reset() {
+
+    this.oldCounterCurrent = mergeObjs(
+      this.value?.counterCurrent,
+      this.oldCounterCurrent,
+    );
+    // console.log(this.oldCounterCurrent);
     this.value = {
-      "rowId" : {},
+      "rowId" : new Set(),
       "name" : {},
       "description" : {},
       "counterTotal" : {},
       "counterCurrent" : {},
+      "counterName" : {},
     }
-    
   }
-
-  calculate() {
-
-    for (let input in this.inputs) {
-      processInput(this.value, this.inputs);
-    }
-    
-  }
-
 }
 
-function processInput(info, input) {
+function orderInputs(a, b) {
 
-  let value = input.effectInfo;
-  if (!value) return;
-
-  if (value.featureSource == "self") {
-
-    let rowId = input.name;
-    info["name"][rowId] = value.name;
-    info["description"][rowId] = value.description;
-    info["rowId"].push(rowId);
-
-  } else {
-
-    let rowId = value.featureSource;
-    let counterId = value.counterId;
-    if (!info["counterTotal"].hasOwnProperty(rowId)) {
-      info["counterTotal"][rowId] = {};
-      info["counterCurrent"][rowId] = {};
-    }
-    info["counterTotal"][rowId][counterId] = value.formula.calculate();
-    info["counterCurrent"][rowId][counterId] = 0;
-
-  }
-
-  this.triggerListeners();
-  return(this.value);
-
-}
-
-
-// setCalcType(calcType) {
-//   if (this.calcType == "resource") this.value = { total: 0, current: 0};
-//   else this.value = 0;
-// }
-
-// setValue(value) {
-//   this.value = value;
-//   this.triggerListeners();
-// }
-
-// removeDependent(effect) {
-//   this.listeners = this.listeners.filter(item => item.name != effect.name);
-// }
-
-// triggerListeners() {
-//   this.listeners.forEach((value) => value.update());
-//   this.linkedViews.forEach((value) => value.update());
-// }
-
-// addInput(effect) {
-
-//   // add to inputs (if not already)
-//   if (this.inputs.includes(effect)) return;
-//   this.inputs.push(effect);
-
-//   // update value
-//   this.calculate();
-
-// }
-
-// removeInput(effect) {
-//   let idx = this.inputs.indexOf(effect);
-//   if (idx == -1) return;
-//   this.inputs.splice(idx, 1);
-//   this.calculate();
-// }
-
-// getSaveInfo() {
+  // we only care about ordering the counters in the correct order;
+  let aSource = a.effectInfo?.featureSource;
+  if (!aSource) return 0;
+  if (a.effectInfo.featureSource == "self") return 0;
   
-//   return ( {
-//     [this.name] : {
-//       "name" : this.name,
-//       "value" : this.value,
-//       "calcType" : this.calcType,
-//     }
-//   });
+  let bSource = b.effectInfo?.featureSource;
+  if (!bSource) return 0;
+  if (b.effectInfo.featureSource == "self") return 0;
+  
+  let aCounterId = a.effectInfo.counter.match(/^counter(\d+)(:.*)?$/i)?.[1];
+  let bCounterId = b.effectInfo.counter.match(/^counter(\d+)(:.*)?$/i)?.[1];
+
+  return(parseInt(aCounterId) - parseInt(bCounterId));
+}

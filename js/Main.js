@@ -2,8 +2,9 @@
 
 import { Controller } from "./controller/Controller.js"
 
-let controller = new Controller();
+// localStorage.removeItem("characterSheet");
 
+let controller = new Controller();
 
 // window.addEventListener("beforeunload", controller.saveInfo);
 
@@ -22,3 +23,4 @@ deleteButton.onclick = function(e) {
   window.removeEventListener("beforeunload", saveInfoHandler);
   localStorage.removeItem("characterSheet");
 }
+

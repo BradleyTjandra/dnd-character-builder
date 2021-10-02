@@ -45,14 +45,6 @@ export default class Views {
     this.effectTree.addNode("stem", "class", "character-component");
 
   }
-
-  // add(elem, attribute, viewType) {
-
-  //   let view = new Display(elem, attribute, viewType);
-  //   this.views[attribute.name] = view;
-  //   return(view);
-
-  // }
   
   loadSaveInfo() {
     
@@ -96,7 +88,6 @@ Views.prototype.addFeatureEffect = binder(feature.addEffect);
 Views.prototype.addFeatureListeners = binder(feature.addListeners);
 
 Views.prototype.addEffectElem = binder(effect.addElem);
-Views.prototype.addEffectEffect = binder(effect.addEffect);
 Views.prototype.addEffectListeners = binder(effect.addListeners);
 
 Views.prototype.add = binder(newDisplay);
