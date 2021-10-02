@@ -2,24 +2,22 @@
 
 export function linkHP(views) {
     
-  let hpDiv = document.getElementById("hp");
-  let hpAttribute = views.controller.attributes.get("hp");    
+  let div = document.getElementById("hp");
+  let attribute = views.controller.attributes.get("hp");    
   
-  let hpCurrentInput = hpDiv.querySelector("[data-feature='hp-current']");
-  hpCurrentInput.addEventListener("input", e => hpAttribute.value.current = parseFloat(e.target.value));
+  let current = div.querySelector("[data-feature='hp-current']");
+  current.addEventListener("input", e => attribute.value.current = parseFloat(e.target.value));
 
-  let hpIncrement = hpDiv.querySelector("input[value='+']");
+  let hpIncrement = div.querySelector("input[value='+']");
   hpIncrement.addEventListener("click", e => {
-    hpAttribute.value.current++;
-    hpCurrentInput.value = hpAttribute.value.current;
+    attribute.value.current++;
+    current.value = attribute.value.current;
   })
   
-  let hpDecrement = hpDiv.querySelector("input[value='-']");
+  let hpDecrement = div.querySelector("input[value='-']");
   hpDecrement.addEventListener("click", e => {
-    hpAttribute.value.current--;
-    hpCurrentInput.value = hpAttribute.value.current;
+    attribute.value.current--;
+    current.value = attribute.value.current;
   })
-
-  // do we want to link this to the total hp value??
 
 }

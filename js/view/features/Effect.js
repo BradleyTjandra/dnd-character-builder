@@ -37,11 +37,11 @@ export function addListeners(div, effect) {
   this.effectTree.addNode(parentEffect, effect.name, "effect");
 
   let effectAttr = div.querySelector("input[data-effect='effect-attribute']");
-  let boundHandleClick = () => handleClick(div, effect);
-  effectAttr.addEventListener("input", boundHandleClick);
+  let boundHandleInput = () => handleInput(div, effect);
+  effectAttr.addEventListener("input", boundHandleInput);
 
   let effectCalc = div.querySelector("input[data-effect='effect-calculation']");
-  effectCalc.addEventListener("input", boundHandleClick);
+  effectCalc.addEventListener("input", boundHandleInput);
 
   let effectDel = div.querySelector("input[data-input='del-effect']");
   effectDel.addEventListener("click", e => {
@@ -52,7 +52,7 @@ export function addListeners(div, effect) {
 
 }
 
-function handleClick(div, effect) {
+function handleInput(div, effect) {
   if (isCounterEffect(div)) setAsCounterEffect(effect, div);
   else if (isHpEffect(div)) setAsHpEffect(effect, div);
   else setAsOtherEffect(effect, div);
@@ -103,7 +103,7 @@ function setAsHpEffect(effect, elem) {
   let nameElem = elem.querySelector("input[data-effect='effect-attribute']");
   let calcElem = elem.querySelector("input[data-effect='effect-calculation']");
 
-  effect.attribute = nameElem.value;
+  effect.attribute = "hp";
   effect.effectType = "total";
   effect.effectInfo = { 
     "formula" : calcElem.value,
