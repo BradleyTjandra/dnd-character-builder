@@ -23,7 +23,7 @@ export class Controller {
     this.views = new Views(this);
     this.views.setup();
     this.views.loadSaveInfo();
-    // this.views.refreshViews();
+    this.views.refreshViews();
 
   }
 

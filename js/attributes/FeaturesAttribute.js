@@ -1,12 +1,13 @@
 "use strict";
 
 import Attribute from "./Attribute.js";
+import { AttributeTypes } from "./Attributes.js";
 import mergeObjs from "../helpers/mergeObjs.js";
 
 export default class FeaturesAttribute extends Attribute {
 
   constructor(name) {
-    super(name, "features");
+    super(name, AttributeTypes.FEATURES);
     this.reset();
   }
 

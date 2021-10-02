@@ -2,8 +2,16 @@
 
 import Attribute from "./Attribute.js";
 import FeaturesAttribute from "./FeaturesAttribute.js";
+import JoinedAttribute from "./JoinedAttribute.js";
 
 let abilityScores = ["str", "dex", "con", "wis", "cha", "int"];
+
+export const AttributeTypes = {
+  FEATURES : "features",
+  JOINED : "joined",
+  CALCULATED : "calculated",
+  FIXED : "fixed",
+}
 
 export default class Attributes {
 
@@ -28,16 +36,15 @@ export default class Attributes {
 
   createAttributesList() {
 
-    this.createAbilityScoreAttributes(value => "base-ability-score-"+value, "fixed");
-    this.createAbilityScoreAttributes(value => value, "calculated");
-    this.createAbilityScoreAttributes(value => value+"mod", "calculated");
-    this.createAbilityScoreAttributes(value => value+"save", "calculated");
+    this.createAbilityScoreAttributes(value => "base-ability-score-"+value, AttributeTypes.FIXED);
+    this.createAbilityScoreAttributes(value => value, AttributeTypes.CALCULATED);
+    this.createAbilityScoreAttributes(value => value+"mod", AttributeTypes.CALCULATED);
+    this.createAbilityScoreAttributes(value => value+"save", AttributeTypes.CALCULATED);
 
-    this.add("name", "fixed");
-    this.add("features-list", "features");
-    // this.addFeaturesAttribute();
-    this.add("speed", "calculated");
-    this.add("languages", "concat");
+    this.add("name", AttributeTypes.FIXED);
+    this.add("features-list", AttributeTypes.FEATURES);
+    this.add("speed", AttributeTypes.CALCULATED);
+    this.add("languages", AttributeTypes.JOINED);
 
     let boundFunc = this.createSkill.bind(this);
 
@@ -46,16 +53,16 @@ export default class Attributes {
     "perception", "performance", "persuasion", "religion", "sleightofhand", "stealth", 
     "survival"].forEach( boundFunc );
 
-    this.add("prof", "calculated");
+    this.add("prof", AttributeTypes.CALCULATED);
 
-    this.add("background-name", "calculated");
-    this.add("race-name", "calculated");
+    this.add("background-name", AttributeTypes.CALCULATED);
+    this.add("race-name", AttributeTypes.CALCULATED);
     this.add("class-name", "ordered-list");
 
     this.add("hp", "resource");
-    this.add("hitdice", "hitdice");
-    this.add("ac", "calculated");
-    this.add("proficiencies", "concat");
+    this.add("hitdice", AttributeTypes.JOINED);
+    this.add("ac", AttributeTypes.CALCULATED);
+    this.add("proficiencies", AttributeTypes.JOINED);
 
   }
 
@@ -74,16 +81,19 @@ export default class Attributes {
     let attribute;
     switch (calcType) {
 
-      case "features":
+      case AttributeTypes.FEATURES:
         attribute = new FeaturesAttribute(name);
         break;
+
+      case AttributeTypes.JOINED:
+        attribute = new JoinedAttribute(name);
 
       default:
         attribute = new Attribute(name, calcType);
         break;
 
     }
-    
+
     this.attributeList[name] = attribute;
     return (attribute);
 
@@ -103,7 +113,7 @@ export default class Attributes {
 
   createSkill(skill) {
 
-    this.add(`${skill}skill`, "calculated");
+    this.add(`${skill}skill`, AttributeTypes.CALCULATED);
     this.add(`${skill}prof`, "boolean_or");
     this.add(`${skill}expertise`, "boolean_or");
 
