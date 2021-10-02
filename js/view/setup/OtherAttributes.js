@@ -29,12 +29,6 @@ export function linkOtherAttributes(views) {
   );
 
   views.add(
-    document.getElementById("hp"),
-    attributes.get("hp"),
-    "resource"
-  );
-
-  views.add(
     document.getElementById("prof"),
     attributes.get("prof"),
     "signed value"

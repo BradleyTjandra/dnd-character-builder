@@ -2,6 +2,7 @@
 
 import Attribute from "./Attribute.js";
 import FeaturesAttribute from "./FeaturesAttribute.js";
+import HpAttribute from "./HpAttribute.js";
 import JoinedAttribute from "./JoinedAttribute.js";
 
 let abilityScores = ["str", "dex", "con", "wis", "cha", "int"];
@@ -11,6 +12,7 @@ export const AttributeTypes = {
   JOINED : "joined",
   CALCULATED : "calculated",
   FIXED : "fixed",
+  RESOURCE : "resource",
 }
 
 export default class Attributes {
@@ -59,7 +61,7 @@ export default class Attributes {
     this.add("race-name", AttributeTypes.CALCULATED);
     this.add("class-name", "ordered-list");
 
-    this.add("hp", "resource");
+    this.add("hp", AttributeTypes.RESOURCE);
     this.add("hitdice", AttributeTypes.JOINED);
     this.add("ac", AttributeTypes.CALCULATED);
     this.add("proficiencies", AttributeTypes.JOINED);
@@ -87,6 +89,11 @@ export default class Attributes {
 
       case AttributeTypes.JOINED:
         attribute = new JoinedAttribute(name);
+        break;
+
+      case AttributeTypes.RESOURCE:
+        attribute = new HpAttribute(name);
+        break;
 
       default:
         attribute = new Attribute(name, calcType);

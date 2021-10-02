@@ -12,12 +12,18 @@ export function linkHP(views) {
   hpIncrement.addEventListener("click", e => {
     attribute.value.current++;
     current.value = attribute.value.current;
-  })
+  });
   
   let hpDecrement = div.querySelector("input[value='-']");
   hpDecrement.addEventListener("click", e => {
     attribute.value.current--;
     current.value = attribute.value.current;
-  })
+  });
+
+  views.add(
+    document.getElementById("hp"),
+    views.controller.attributes.get("hp"),
+    "resource"
+  );
 
 }
