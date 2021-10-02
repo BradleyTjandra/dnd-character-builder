@@ -24,7 +24,8 @@ export function onClickFeatureList(event) {
     let elem = event.target.closest("div[data-feature='effect-all']");
     addInventory.call(this, elem);
 
-  } else if (button.dataset.input == "add-effect") {
+  } else 
+  if (button.dataset.input == "add-effect") {
     
     let elem = event.target.closest("div[data-feature='effect-all']");
     addEffect.call(this, elem);

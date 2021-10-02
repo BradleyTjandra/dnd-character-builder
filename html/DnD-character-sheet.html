@@ -110,15 +110,16 @@
     </div>
   </div>
 
-  <div id="templates" hidden>
-
-    <div data-feature="effect" id="hidden-effect" hidden>
+  <template id="template-effect">
+    <div data-feature="effect">
       <input placeholder="Attribute" data-effect="effect-attribute">
       <input size="52" placeholder="Calculation" data-effect="effect-calculation">
       <input type="button" value="Delete" data-input="del-effect">
     </div>
+  </template>
 
-    <div id="hidden-feature" data-feature="feature-all"  hidden>
+  <template id="template-feature">
+    <div data-feature="feature-all">
       <div>
         <b>Feature Name: </b>
         <input data-feature="feature-name" size=48>
@@ -131,14 +132,15 @@
       <div data-feature="effect-all"><b>Effects</b>
         <div><input type="button" value="Add Effect" data-input='add-effect'></div>
       </div>
-    </div>
+    </div>    
+  </template>
 
-    <div data-feature="all-feature" id="hidden-all-feature">
+  <template id="template-all-feature">
+    <div data-feature="all-feature">
       <h3>Name <input data-feature="feature-group-name" placeholder="Name" value=""></h3>
       <input type="button" data-input="add-feature" value="Add Feature">
     </div>
-    
-  </div>
+  </template> 
 
   <template id="template-counter">
     <div data-feature="counter">

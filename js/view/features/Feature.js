@@ -1,5 +1,7 @@
 "use strict";
 
+import createFromTemplate from "../../helpers/createFromTemplate.js";
+
 export function add(parent) {
 
   let elem = addElem.call(this, parent);
@@ -12,15 +14,14 @@ export function add(parent) {
 export function addElem(featureGroupingElem) {
 
   // Create new feature div
-  let featureElem = document.getElementById("hidden-feature").cloneNode(true);
-  featureElem.hidden = false;
-  featureElem.removeAttribute("id");
+  let featureElem = createFromTemplate("template-feature");
+  let addFeatureButton = featureGroupingElem.querySelector("input[data-input='add-feature']");
+  addFeatureButton.before(featureElem);
+
+  featureElem = addFeatureButton.previousElementSibling;
   
   let featureType = featureGroupingElem.dataset.featureType;
   featureElem.dataset.featureType = featureType;
-
-  let addFeatureButton = featureGroupingElem.querySelector("input[data-input='add-feature']");
-  addFeatureButton.before(featureElem);
 
   // false so that the button scrolls into view at button
   addFeatureButton.scrollIntoView(false); 

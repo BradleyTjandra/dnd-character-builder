@@ -1,5 +1,7 @@
 "use strict";
 
+import createFromTemplate from "../../helpers/createFromTemplate.js";
+
 
 export function add(elem) {
 
@@ -11,16 +13,15 @@ export function add(elem) {
 
 export function addElem(elem) {
 
-  let classElem = document.getElementById("hidden-all-feature").cloneNode(true);
-  classElem.hidden = false;
-  classElem.removeAttribute("id");
-
+  let classElem = createFromTemplate("template-all-feature");
   let parentElem = elem.closest("[data-feature-type]");
+  parentElem.append(classElem);
+  
+  classElem = parentElem.lastElementChild;
   classElem.dataset.featureType = parentElem.dataset.featureType;
 
   let addClassButton = elem.querySelector("input[data-input='add-feature-group']");
   if (addClassButton) addClassButton.before(classElem);
-  else parentElem.append(classElem);
   
   return(classElem);
   

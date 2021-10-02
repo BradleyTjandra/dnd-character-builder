@@ -1,5 +1,6 @@
 "use strict";
 
+import createFromTemplate from "../../helpers/createFromTemplate.js";
 import { linkType } from "../../links/Link.js";
 
 export function add(parent) {
@@ -17,22 +18,11 @@ export function addListeners(div, effect) {
   this.effectTree.addNode(parentEffect, effect.name, "effect");
 
   let effectAttr = div.querySelector("input[data-effect='effect-attribute']");
-  effectAttr.addEventListener("input", e => {
-
-    if (isCounterEffect(div)) setAsCounterEffect(effect, div);
-    else if (isHpEffect(div)) setAsHpEffect(effect, div);
-    else setAsOtherEffect(effect, div);
-
-  });
+  let boundHandleClick = () => handleClick(div, effect);
+  effectAttr.addEventListener("input", boundHandleClick);
 
   let effectCalc = div.querySelector("input[data-effect='effect-calculation']");
-  effectCalc.addEventListener("input", e => {
-    
-    if (isCounterEffect(div)) setAsCounterEffect(effect, div);
-    else if (isHpEffect(div)) setAsHpEffect(effect, div);
-    else setAsOtherEffect(effect, div);
-
-  } );
+  effectCalc.addEventListener("input", boundHandleClick);
 
   let effectDel = div.querySelector("input[data-input='del-effect']");
   effectDel.addEventListener("click", e => {
@@ -45,14 +35,14 @@ export function addListeners(div, effect) {
 
 export function addElem(effectsElem) {
 
-  let effectElem = document.getElementById("hidden-effect").cloneNode(true);
-  effectElem.hidden = false;
-  effectElem.removeAttribute("id");
+  let effectElem = createFromTemplate("template-effect");
 
   let addEffectDiv = effectsElem
     .querySelector("input[data-input='add-effect']")
     .parentNode;
   addEffectDiv.before(effectElem);
+
+  effectElem = addEffectDiv.previousElementSibling;
 
   effectElem.dataset.featureType = addEffectDiv
     .closest("[data-feature]")
@@ -62,11 +52,15 @@ export function addElem(effectsElem) {
 
 }
 
+function handleClick(div, effect) {
+  if (isCounterEffect(div)) setAsCounterEffect(effect, div);
+  else if (isHpEffect(div)) setAsHpEffect(effect, div);
+  else setAsOtherEffect(effect, div);
+}
+
 function isCounterEffect(elem) {
   let nameElem = elem.querySelector("input[data-effect='effect-attribute']");
   if (!nameElem) return false;
-  // console.log(nameElem.value);
-  // console.log(/^counter\d+[:.*]?$/.test(nameElem.value));
   return(/^counter\d+(:.*)?$/.test(nameElem.value));
 }
 
