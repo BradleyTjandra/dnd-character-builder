@@ -14,7 +14,7 @@ import * as feature from "./features/Feature.js";
 import * as effect from "./features/Effect.js";
 import isEmptyObj from "../helpers/isEmptyObj.js";
 import FeatureTree from "./features/FeatureTree.js";
-import newDisplay from "./displays/newDisplay.js";
+import addDisplay from "./displays/addDisplay.js";
 
 export default class Views {
 
@@ -90,7 +90,7 @@ Views.prototype.addFeatureListeners = binder(feature.addListeners);
 Views.prototype.addEffectElem = binder(effect.addElem);
 Views.prototype.addEffectListeners = binder(effect.addListeners);
 
-Views.prototype.add = binder(newDisplay);
+Views.prototype.add = binder(addDisplay);
 
 function binder(func) {
   return(function(...args) {

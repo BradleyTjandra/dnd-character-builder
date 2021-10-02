@@ -45,6 +45,7 @@ export default class Attributes {
 
     this.add("name", AttributeTypes.FIXED);
     this.add("features-list", AttributeTypes.FEATURES);
+    this.add("inventory", AttributeTypes.FEATURES);
     this.add("speed", AttributeTypes.CALCULATED);
     this.add("languages", AttributeTypes.JOINED);
 

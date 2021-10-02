@@ -34,5 +34,11 @@ export function linkOtherAttributes(views) {
     "signed value"
   );
 
+  views.add(
+    document.getElementById("hitdice"),
+    attributes.get("hitdice"),
+    "hitdice"
+  );
+
 }
 
