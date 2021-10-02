@@ -13,7 +13,7 @@ export function onClickFeatureList(event) {
   let featureType = event.target.closest("[data-feature-type]")
     .dataset.featureType;
 
-  if (featureType == "inventory") {
+  if (featureType == "inventory" && button.dataset.input == "add-feature") {
 
     let elem = event.target.closest("div[data-feature='feature-group']");
     addInventory.call(this, elem);

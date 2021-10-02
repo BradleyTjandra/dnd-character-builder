@@ -40,6 +40,6 @@ export function addListeners(elem, effect) {
   elem.dataset.effectId = effect.name;
   this.effectTree.addNode(elem.dataset.featureType, effect.name, "feature-grouping");
   let featureGroupElem = elem.querySelector("input[data-feature='feature-group-name']");
-  featureGroupElem.addEventListener("input", e => effect.effectInfo.name = e.target.value);
+  featureGroupElem.addEventListener("input", e => effect.info.name = e.target.value);
 
 }

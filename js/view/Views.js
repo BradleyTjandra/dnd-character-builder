@@ -43,6 +43,10 @@ export default class Views {
     this.effectTree.addNode("stem", "race", "character-component");
     this.effectTree.addNode("stem", "background", "character-component");
     this.effectTree.addNode("stem", "class", "character-component");
+    this.effectTree.addNode("stem", "inventory", "character-component");
+    this.effectTree.addNode("inventory",
+      "inventory-feature-group",
+      "feature-grouping");
 
   }
   

@@ -78,7 +78,9 @@ function setAsCounterEffect(effect, elem) {
   let nameVal = nameElem.value;
 
   if (effect.name != nameVal) {
-    effect.attribute = "features-list";
+    let featType = elem.closest("[data-feature-type]").dataset.featureType;
+    if (featType == "inventory") effect.attribute = "inventory";
+    else effect.attribute = "features-list";
   }
 
   let colonIdx = nameVal.search(":");
@@ -86,8 +88,8 @@ function setAsCounterEffect(effect, elem) {
   let counterName = colonIdx > -1 ? nameVal.slice(colonIdx+1) : nameVal;
   counterName = counterName.trim();
 
-  effect.effectType = linkType.CALCULATED;
-  effect.effectInfo = {
+  effect.type = linkType.CALCULATED;
+  effect.info = {
     "name" : nameElem.value,
     "calculation" : calcElem.value,
     "counter" : counterId,
@@ -104,8 +106,8 @@ function setAsHpEffect(effect, elem) {
   let calcElem = elem.querySelector("input[data-effect='effect-calculation']");
 
   effect.attribute = "hp";
-  effect.effectType = "total";
-  effect.effectInfo = { 
+  effect.type = "total";
+  effect.info = { 
     "formula" : calcElem.value,
     "name" : nameElem.value,
     "calculation" : calcElem.value,
@@ -119,8 +121,8 @@ function setAsOtherEffect(effect, elem) {
   let calcElem = elem.querySelector("input[data-effect='effect-calculation']");
 
   effect.attribute = nameElem.value;
-  effect.effectType = linkType.CALCULATED;
-  effect.effectInfo = { 
+  effect.type = linkType.CALCULATED;
+  effect.info = { 
     "formula" : calcElem.value,
     "name" : nameElem.value,
     "calculation" : calcElem.value,

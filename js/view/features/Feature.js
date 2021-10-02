@@ -35,7 +35,7 @@ export function addEffect() {
   // create an effect for a text description of the feature
   let featureDescriptions = this.controller.attributes.get("features-list");
   let effect = this.controller.effects.add(featureDescriptions, undefined, "user");
-  effect.effectInfo = {'name':'','description':'', featureSource: "self"};
+  effect.info = {'name':'','description':'', featureSource: "self"};
   return(effect);
 
 }
@@ -47,17 +47,17 @@ export function addListeners(featureElem, effect) {
   // Listener for feature name changes
   let featureName = featureElem.querySelector("input[data-feature='feature-name']");
   featureName.addEventListener("input", e => {
-    let info = effect.effectInfo ?? {};
+    let info = effect.info ?? {};
     info['name'] = e.target.value;
-    effect.effectInfo = info;
+    effect.info = info;
   });
 
   // Listener for feature description changes
   let featureDesc = featureElem.querySelector("textarea[data-feature='feature-description']");
   featureDesc.addEventListener("input", e => {
-    let info = effect.effectInfo ?? {};
+    let info = effect.info ?? {};
     info['description'] = e.target.value;
-    effect.effectInfo = info;
+    effect.info = info;
   });
 
   // Listener for feature being deleted

@@ -19,7 +19,7 @@ export default class FeaturesAttribute extends Attribute {
 
   processInput(input) {
 
-    let inputValue = input.effectInfo;
+    let inputValue = input.info;
     if (!inputValue) return;
   
     if (inputValue.featureSource == "self") {
@@ -76,16 +76,16 @@ export default class FeaturesAttribute extends Attribute {
 function orderInputs(a, b) {
 
   // we only care about ordering the counters in the correct order;
-  let aSource = a.effectInfo?.featureSource;
+  let aSource = a.info?.featureSource;
   if (!aSource) return 0;
-  if (a.effectInfo.featureSource == "self") return 0;
+  if (a.info.featureSource == "self") return 0;
   
-  let bSource = b.effectInfo?.featureSource;
+  let bSource = b.info?.featureSource;
   if (!bSource) return 0;
-  if (b.effectInfo.featureSource == "self") return 0;
+  if (b.info.featureSource == "self") return 0;
   
-  let aCounterId = a.effectInfo.counter.match(/^counter(\d+)(:.*)?$/i)?.[1];
-  let bCounterId = b.effectInfo.counter.match(/^counter(\d+)(:.*)?$/i)?.[1];
+  let aCounterId = a.info.counter.match(/^counter(\d+)(:.*)?$/i)?.[1];
+  let bCounterId = b.info.counter.match(/^counter(\d+)(:.*)?$/i)?.[1];
 
   return(parseInt(aCounterId) - parseInt(bCounterId));
 }

@@ -19,7 +19,7 @@ export default class Links {
 
   }
 
-  add(attribute, effectInfo, source, effectType = linkType.FIXED) {
+  add(attribute, info, source, type = linkType.FIXED) {
 
     let name = this.generateUniqueID();
 
@@ -27,18 +27,18 @@ export default class Links {
 
     effect.name = name;
     effect.attribute = attribute;
-    effect.effectType = effectType;
+    effect.type = type;
 
-    if (typeof effectInfo === "string") {
-      if (effectType == linkType.FIXED) {
-        effect.effectInfo = {"value" : effectInfo};
-      } else if (effectType == linkType.CALCULATED) {
-        effect.effectInfo = {"formula" : effectInfo}
+    if (typeof info === "string") {
+      if (type == linkType.FIXED) {
+        effect.info = {"value" : info};
+      } else if (type == linkType.CALCULATED) {
+        effect.info = {"formula" : info}
       } else {
-        new Error(`unknown type: ${effectType}`);
+        new Error(`unknown type: ${type}`);
       }
     } else {
-      effect.effectInfo = effectInfo;
+      effect.info = info;
     }
 
     this.effectsList[name] = effect;
@@ -90,8 +90,8 @@ export default class Links {
       let effect = new Link(this.attributes, "user");
       effect.setDetails(effectData.name, 
         effectData.attribute, 
-        effectData.effectInfo, 
-        effectData.effectType
+        effectData.info, 
+        effectData.type
         );
       this.effectsList[effectData.name] = effect;
 

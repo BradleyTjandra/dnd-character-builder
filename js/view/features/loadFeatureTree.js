@@ -40,7 +40,7 @@ function loadFeatureGrouping(elem, child) {
   let featureGroupName = childElem.querySelector(
     "input[data-feature='feature-group-name']"
   );
-  featureGroupName.value = effect.effectInfo.name ?? "";
+  featureGroupName.value = effect.info.name ?? "";
   let boundLoader = loadFeature.bind(this, childElem);
   node.children.forEach(boundLoader);
 }
@@ -61,9 +61,9 @@ function loadFeature(elem, child) {
 
   // refresh values from effect info
   childElem.querySelector("input[data-feature='feature-name']").value 
-    = effect.effectInfo.name;
+    = effect.info.name;
   childElem.querySelector("textarea[data-feature='feature-description']").value
-    = effect.effectInfo.description;
+    = effect.info.description;
 
   let boundLoader = loadEffect.bind(this, childElem);
   node.children.forEach(boundLoader);
@@ -83,7 +83,7 @@ function loadEffect(elem, child) {
 
   // refresh values from effect info
   childElem.querySelector("input[data-effect='effect-attribute']").value 
-    = effect.effectInfo.name;
+    = effect.info.name;
   childElem.querySelector("input[data-effect='effect-calculation']").value 
-    = effect.effectInfo.calculation;
+    = effect.info.calculation;
 }

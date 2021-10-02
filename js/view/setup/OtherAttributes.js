@@ -11,6 +11,12 @@ export function linkOtherAttributes(views) {
   );
 
   views.add(
+    document.getElementById("inventory-descriptions"), 
+    attributes.get("inventory"),
+    "features"
+  );
+
+  views.add(
     document.getElementById("speed"),
     attributes.get("speed"),
     "value"
