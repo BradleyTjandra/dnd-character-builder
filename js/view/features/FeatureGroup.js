@@ -13,7 +13,7 @@ export function add(elem) {
 
 export function addElem(elem) {
 
-  let classElem = createFromTemplate("template-all-feature");
+  let classElem = createFromTemplate("template-feature-group");
   let parentElem = elem.closest("[data-feature-type]");
   parentElem.append(classElem);
   

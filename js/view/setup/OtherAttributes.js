@@ -6,7 +6,7 @@ export function linkOtherAttributes(views) {
 
   views.add(
       document.getElementById("feature-descriptions"), 
-      attributes.get("all-features-descriptions"),
+      attributes.get("feature-group-descriptions"),
       "features"
   );
 

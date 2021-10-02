@@ -66,7 +66,7 @@ export default class Attributes {
 
   add(name, calcType, overwrite = false) {
 
-    if (name == "all-features-descriptions") {
+    if (name == "feature-group-descriptions") {
       return(this.addFeaturesAttribute());
     }
 
@@ -81,7 +81,7 @@ export default class Attributes {
   }
 
   addFeaturesAttribute() {
-    let name = "all-features-descriptions";
+    let name = "feature-group-descriptions";
     if (name in this.attributeList) {
       return(this.attributeList[name]);
     }

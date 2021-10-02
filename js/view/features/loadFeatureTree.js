@@ -78,7 +78,7 @@ function loadEffect(elem, child) {
   if (!effect) return;
 
   // add effect elements
-  let effectsElem = elem.querySelector("div[data-feature='effect-all']");
+  let effectsElem = elem.querySelector("div[data-feature='feature']");
   let childElem = this.addEffectElem(effectsElem);
 
   // link effect elements to effect
@@ -136,7 +136,7 @@ function loadEffect(elem, child) {
 //     if (!effect) return;
 
 //     // add effect elements
-//     let effectsElem = elem.querySelector("div[data-feature='effect-all']");
+//     let effectsElem = elem.querySelector("div[data-feature='feature']");
 //     let childrenElem = this.addEffectElem(effectsElem);
 
 //     // link effect elements to effect

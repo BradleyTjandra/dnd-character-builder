@@ -4,9 +4,28 @@ import createFromTemplate from "../../helpers/createFromTemplate.js";
 import { linkType } from "../../links/Link.js";
 
 export function add(parent) {
-  let effectElem = addElem.call(this,parent);
+  let effectElem = addElem.call(this, parent);
   let effect = this.controller.effects.add(undefined, undefined, "user", "calculated");
-  addListeners.call(this,effectElem, effect);
+  addListeners.call(this, effectElem, effect);
+}
+
+export function addElem(effectsElem) {
+
+  let effectElem = createFromTemplate("template-effect");
+
+  let addEffectElem = effectsElem
+    .querySelector("input[data-input='add-effect']")
+    .parentNode;
+    addEffectElem.before(effectElem);
+
+  effectElem = addEffectElem.previousElementSibling;
+
+  effectElem.dataset.featureType = addEffectElem
+    .closest("[data-feature-type]")
+    .dataset
+    .featureType;
+  return(effectElem);
+
 }
 
 export function addListeners(div, effect) {
@@ -30,25 +49,6 @@ export function addListeners(div, effect) {
     this.controller.effects.removeEffect(effect);
     this.effectTree.removeNode(effect.name);
   })
-
-}
-
-export function addElem(effectsElem) {
-
-  let effectElem = createFromTemplate("template-effect");
-
-  let addEffectDiv = effectsElem
-    .querySelector("input[data-input='add-effect']")
-    .parentNode;
-  addEffectDiv.before(effectElem);
-
-  effectElem = addEffectDiv.previousElementSibling;
-
-  effectElem.dataset.featureType = addEffectDiv
-    .closest("[data-feature]")
-    .dataset
-    .featureType;
-  return(effectElem);
 
 }
 
@@ -78,7 +78,7 @@ function setAsCounterEffect(effect, elem) {
   let nameVal = nameElem.value;
 
   if (effect.name != nameVal) {
-    effect.attribute = "all-features-descriptions";
+    effect.attribute = "feature-group-descriptions";
   }
 
   let colonIdx = nameVal.search(":");

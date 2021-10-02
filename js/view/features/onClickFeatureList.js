@@ -10,29 +10,22 @@ export function onClickFeatureList(event) {
   let button = event.target.closest("input[type=button]");
   if (!button) return;
 
-  let charComp = event.target.closest("div[data-feature='character-component']");
-  if (!charComp) {
-    console.log(button);
-    console.log(button.parent);
-    // console.log(button.parent.parent);
-    // console.log(button.parent.parent.parent);
-  }
-  let featureType = charComp.dataset.featureType;
+  let featureType = event.target.closest("[data-feature-type]")
+    .dataset.featureType;
 
   if (featureType == "inventory") {
 
-    let elem = event.target.closest("div[data-feature='effect-all']");
+    let elem = event.target.closest("div[data-feature='feature-group']");
     addInventory.call(this, elem);
 
-  } else 
-  if (button.dataset.input == "add-effect") {
+  } else if (button.dataset.input == "add-effect") {
     
-    let elem = event.target.closest("div[data-feature='effect-all']");
+    let elem = event.target.closest("div[data-feature='feature']");
     addEffect.call(this, elem);
 
   } else if (button.dataset.input == "add-feature") {
     
-    let elem = event.target.closest("div[data-feature='all-feature']");
+    let elem = event.target.closest("div[data-feature='feature-group']");
     addFeature.call(this, elem);
 
   } else if (button.dataset.input == "add-feature-group") {

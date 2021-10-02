@@ -100,12 +100,8 @@
     </div>
     <h2>Inventory</h2>
     <div data-feature-type="inventory" data-feature="character-component">
-      <div data-feature="all-feature">
-        <div data-feature="feature-all">
-          <div data-feature="effect-all">
-            <div><input type="button" value="Add Item" data-input='add-effect'></div>
-          </div>
-        </div>
+      <div data-feature="feature-group">
+        <div><input type="button" value="Add Item" data-input='add-feature'></div>
       </div>
     </div>
   </div>
@@ -119,24 +115,24 @@
   </template>
 
   <template id="template-feature">
-    <div data-feature="feature-all">
+    <div data-feature="feature">
       <div>
-        <b>Feature Name: </b>
+        <b name-title>Feature Name: </b>
         <input data-feature="feature-name" size=48>
         <input type="button" value="Delete Feature" data-input="del-feature">
       </div>
       <div>
-        <div><b>Feature Description: </b></div>
+        <div><b desc-title>Feature Description: </b></div>
         <textarea cols="64" data-feature="feature-description"></textarea>
       </div>
-      <div data-feature="effect-all"><b>Effects</b>
+      <div><b>Effects</b>
         <div><input type="button" value="Add Effect" data-input='add-effect'></div>
       </div>
     </div>    
   </template>
 
-  <template id="template-all-feature">
-    <div data-feature="all-feature">
+  <template id="template-feature-group">
+    <div data-feature="feature-group">
       <h3>Name <input data-feature="feature-group-name" placeholder="Name" value=""></h3>
       <input type="button" data-input="add-feature" value="Add Feature">
     </div>
