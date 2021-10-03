@@ -46,5 +46,11 @@ export function linkOtherAttributes(views) {
     "hitdice"
   );
 
+  views.add(
+    document.getElementById("ac"),
+    attributes.get("ac"),
+    "value"
+  );
+
 }
 

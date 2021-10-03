@@ -37,7 +37,7 @@ function loadFeatureGrouping(elem, child) {
   let node = processNode(child);
   let childElem;
   if (elem.dataset.featureType == "inventory") {
-    childElem = elem.querySelector["[data-feature='feature-group']"];
+    childElem = elem.querySelector("[data-feature='feature-group']");
   } else {
     childElem = this.addFeatureGroupElem(elem);
     let effect = this.controller.effects.get(node.effectName);
@@ -47,7 +47,6 @@ function loadFeatureGrouping(elem, child) {
     );
     featureGroupName.value = effect.info.name ?? "";
   }
-  
   let boundLoader = loadFeature.bind(this, childElem);
   node.children.forEach(boundLoader);
 }
@@ -63,7 +62,9 @@ function loadFeature(elem, child) {
   let childElem = this.addFeatureElem(elem);
 
   // link feature elements to effect
-  this.effectTree.addNode(elem.dataset.effectId, effect.name, "feature");
+  let parentNode = elem.dataset.effectId;
+  if (elem.dataset.featureType == "inventory") parentNode = "inventory-feature-group";
+  this.effectTree.addNode(parentNode, effect.name, "feature");
   this.addFeatureListeners(childElem, effect);
 
   // refresh values from effect info

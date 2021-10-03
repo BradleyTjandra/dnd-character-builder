@@ -36,7 +36,6 @@ export function addEffect(elem) {
 }
 
 export function addListeners(elem, effect) {
-  // if(elem.dataset.featureType == "inventory") return;
   elem.dataset.effectId = effect.name;
   this.effectTree.addNode(elem.dataset.featureType, effect.name, "feature-grouping");
   let featureGroupElem = elem.querySelector("input[data-feature='feature-group-name']");
