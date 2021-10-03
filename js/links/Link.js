@@ -40,12 +40,22 @@ export class Link {
   get value() {
 
     if (!this.isSetup) return undefined;
-    
-    if (this.type.includes(linkType.FIXED)) {
-      return this.info;
-    } else if (this.type.includes(linkType.CALCULATED)) {
-      return this.formula.calculate();
-    } 
+
+    if (!this._formula) return this.info;
+
+    console.log("this formula is:")
+    console.log(this._formula);
+
+    let evaluated = this._formula.map( (calc) => {
+      if (typeof calc === "string") return (calc);
+      else return (calc.calculate());
+      }
+    );
+    console.log("evaluated is:");
+    console.log(evaluated);
+    let joined = evaluated.join("");
+    console.log("joined is: " + joined);
+    return(joined);
 
   }
 
@@ -57,12 +67,23 @@ export class Link {
     let oldInfo = Object.assign({}, this._info['data']);
     if (oldInfo == newInfo) return;
     this._info['data'] = newInfo;
+    this._formula = undefined;
     
     if ("formula" in newInfo) {
       let calc = this.calculationFromFormulaText(newInfo.formula);
-      this.formula = calc;
-      this._info["valid"] = calc.getValidity();
-      this.inputs = Array.from(calc.getInputs());
+      this._formula = calc; 
+
+      this._info["valid"] = calc.reduce( (prev, c) => {
+        if (typeof c === "string") return prev;
+
+        console.log(c);
+        return (prev && c.getValidity());
+      }, true);
+
+      this.inputs = Array.from(
+        calc.reduce(getAllInputs, new Set())
+      );
+      
     } else {
       this._info["valid"] = true;
       this.inputs = [];
@@ -70,11 +91,13 @@ export class Link {
 
     this.isSetup = (this._info["valid"] && this._attribute["valid"]);
 
-    if (this.isSetup) {
+    console.log("this formula is:");
+    console.log(this._formula);
+    console.log(this);
 
+    if (this.isSetup) {
       this.inputs.forEach((attr) => attr.listeners.push(this));
       this.attribute.calculate();
-
     }
 
   }
@@ -82,13 +105,6 @@ export class Link {
   get info() {
     return(this._info['data']);
   }
-
-  // setinfoByKey(key, info) {
-  //   this.info = Object.assign(
-  //     this.info,
-  //     {[key] : info}
-  //   );
-  // }
 
   set attribute(newAttribute) {
 
@@ -153,12 +169,28 @@ export class Link {
 
 
   calculationFromFormulaText(text) {
+    if (/[^\\]\$/.test(text)) {
+      let subtexts = text.split("$");
+      let calcs = subtexts.map( (txt, i) => {
+        if (i % 2 == 0) return txt;
+        else return new Calculation(txt);
+      });
+      // console.log(calcs);
+      return(calcs);
+    }
+    
     let formulaText;
     if (text[0] == "+" || text[0] == "-" || /^\s*$/.test(text))  {
       formulaText = "0" + text;
     } else {
       formulaText = text;
     }
-    return(new Calculation(formulaText, this.attributes, this));
+    let calc = new Calculation(formulaText, this.attributes, this);
+    return([calc]);
   }
+}
+
+function getAllInputs(prev, calc) {
+  if (calc.constructor.name == "Calculation") return new Set(prev, calc.getInputs());
+  else return prev;
 }

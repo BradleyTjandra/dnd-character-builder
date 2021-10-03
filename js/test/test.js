@@ -7,8 +7,9 @@ let attributes = new Attributes();
 let b = attributes.add("hello-there", "fixed");
 b.setValue(2);
 let a = new Calculation("if({{hello-there}}=3,1,0)", attributes, undefined);
-console.log(a.calculate());
-console.log(a);
+
+console.log(a.constructor.name);
+// console.log(Object.prototype.toString.call(a));
 // let b = new Attribute("hello-there");
 
 

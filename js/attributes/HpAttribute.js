@@ -13,7 +13,7 @@ export default class HpAttribute extends Attribute {
 
   calculate() {
     let filtered = this.inputs.filter(x => x.isSetup);
-    let calculated = filtered.map(input => input.formula.calculate());
+    let calculated = filtered.map(input => input.value);
     this.value.total = calculated.reduce(sumOver, 0);
     this.triggerListeners();
   }
