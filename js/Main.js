@@ -2,7 +2,7 @@
 
 import { Controller } from "./controller/Controller.js"
 
-// localStorage.removeItem("characterSheet");
+localStorage.removeItem("characterSheet");
 
 let controller = new Controller();
 

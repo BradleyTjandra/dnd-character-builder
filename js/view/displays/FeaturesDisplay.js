@@ -54,12 +54,15 @@ export default class FeaturesDisplay extends Display {
 
   createTextTd(featuresData, rowId) {
     let td = document.createElement("td");
-    td.innerHTML = `<div>
-      <b><i>
-        ${featuresData.name[rowId] +"." ?? "" }
-      </i></b> 
-      ${featuresData.description[rowId] ?? "" }
-      </div>`;
+
+    let name = featuresData.name[rowId];
+    if (!name) name = "";
+    if (/[\w\s]$/.test(name)) name += ".";
+    
+    let description = featuresData.description[rowId];
+    if (!description) description = "";
+  
+    td.innerHTML = `<div><b><i>${name}</i></b>${description}</div>`;
     return(td);
   }
 

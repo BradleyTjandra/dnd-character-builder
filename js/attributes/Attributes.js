@@ -2,6 +2,7 @@
 
 import Attribute from "./Attribute.js";
 import FeaturesAttribute from "./FeaturesAttribute.js";
+import HitDiceAttribute from "./HitDiceAttribute.js";
 import HpAttribute from "./HpAttribute.js";
 import JoinedAttribute from "./JoinedAttribute.js";
 
@@ -13,6 +14,7 @@ export const AttributeTypes = {
   CALCULATED : "calculated",
   FIXED : "fixed",
   RESOURCE : "resource",
+  HITDICE : "hitdice",
 }
 
 export default class Attributes {
@@ -63,7 +65,7 @@ export default class Attributes {
     this.add("class-name", "ordered-list");
 
     this.add("hp", AttributeTypes.RESOURCE);
-    this.add("hitdice", AttributeTypes.JOINED);
+    this.add("hitdice", AttributeTypes.HITDICE);
     this.add("ac", AttributeTypes.CALCULATED);
     this.add("proficiencies", AttributeTypes.JOINED);
 
@@ -96,6 +98,10 @@ export default class Attributes {
         attribute = new HpAttribute(name);
         break;
 
+      case AttributeTypes.HITDICE:
+        attribute = new HitDiceAttribute(name);
+        break;
+
       default:
         attribute = new Attribute(name, calcType);
         break;
@@ -106,18 +112,6 @@ export default class Attributes {
     return (attribute);
 
   }
-
-  // addFeaturesAttribute() {
-  //   let name = "features-list";
-  //   if (name in this.attributeList) {
-  //     return(this.attributeList[name]);
-  //   }
-
-  //   let attribute = new FeaturesAttribute(name);
-  //   this.attributeList[name] = attribute;
-  //   return (attribute);
-
-  // }
 
   createSkill(skill) {
 
