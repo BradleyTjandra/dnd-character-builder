@@ -33,14 +33,21 @@ function loadCharacterComponent(child) {
 }
 
 function loadFeatureGrouping(elem, child) {
+
   let node = processNode(child);
-  let childElem = this.addFeatureGroupElem(elem);
-  let effect = this.controller.effects.get(node.effectName);
-  this.addFeatureGroupListeners(childElem, effect); 
-  let featureGroupName = childElem.querySelector(
-    "input[data-feature='feature-group-name']"
-  );
-  featureGroupName.value = effect.info.name ?? "";
+  let childElem;
+  if (elem.dataset.featureType == "inventory") {
+    childElem = elem.querySelector["[data-feature='feature-group']"];
+  } else {
+    childElem = this.addFeatureGroupElem(elem);
+    let effect = this.controller.effects.get(node.effectName);
+    this.addFeatureGroupListeners(childElem, effect); 
+    let featureGroupName = childElem.querySelector(
+      "input[data-feature='feature-group-name']"
+    );
+    featureGroupName.value = effect.info.name ?? "";
+  }
+  
   let boundLoader = loadFeature.bind(this, childElem);
   node.children.forEach(boundLoader);
 }

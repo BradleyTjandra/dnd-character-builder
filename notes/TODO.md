@@ -1,0 +1,1 @@
+* in loadTreeNode process the node straight away

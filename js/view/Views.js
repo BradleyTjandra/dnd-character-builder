@@ -58,10 +58,9 @@ export default class Views {
     // if there was no race or background in the saved info, we load elems for them here
     for (let component of ["race", "background"]) {
       if (noCharComponent(featuresTree, component)) {
-        let elem = document.querySelector(
-          "div[data-feature='character-component']" + 
-          `[data-feature-type='${component}']`
-        );
+        let query = "div[data-feature='character-component']" 
+          + `[data-feature-type='${component}']`;
+        let elem = document.querySelector(query);
         featureGroup.add.call(this, elem);
       }
     }

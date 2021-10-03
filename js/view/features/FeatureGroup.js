@@ -6,7 +6,7 @@ import createFromTemplate from "../../helpers/createFromTemplate.js";
 export function add(elem) {
 
   let featureGroup = addElem.call(this,elem);
-  let effect = addEffect.call(this,featureGroup);
+  let effect = addEffect.call(this, featureGroup);
   addListeners.call(this, featureGroup, effect);
 
 }
@@ -36,7 +36,7 @@ export function addEffect(elem) {
 }
 
 export function addListeners(elem, effect) {
-
+  // if(elem.dataset.featureType == "inventory") return;
   elem.dataset.effectId = effect.name;
   this.effectTree.addNode(elem.dataset.featureType, effect.name, "feature-grouping");
   let featureGroupElem = elem.querySelector("input[data-feature='feature-group-name']");

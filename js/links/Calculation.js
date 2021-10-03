@@ -78,7 +78,6 @@ export default class Calculation {
 
   calculate() {
 
-
     if (!this.getValidity()) {
       return undefined;
     } else if (this.op == "attribute") {

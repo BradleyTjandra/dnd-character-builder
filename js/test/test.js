@@ -1,9 +1,17 @@
 "use strict";
 
-// let attributes = new Attributes();
-// let b = attributes.add("hello-there", "fixed");
-// b.setValue(3);
-// // let b = new Attribute("hello-there");
+import Calculation from "../links/Calculation.js";
+import Attributes from "../attributes/Attributes.js";
+
+let attributes = new Attributes();
+let b = attributes.add("hello-there", "fixed");
+b.setValue(2);
+let a = new Calculation("if({{hello-there}}=3,1,0)", attributes, undefined);
+console.log(a.calculate());
+console.log(a);
+// let b = new Attribute("hello-there");
+
+
 // // b.setValue(3);
 // // let a = new Calculation("{{hello-there}}+if(4>(3+43),8*(20-3),4/(2-1))", attributes, undefined);
 // // let a = new Calculation("{{hello-there}}+8*(20-3)+4/(2-1)", attributes, undefined);
