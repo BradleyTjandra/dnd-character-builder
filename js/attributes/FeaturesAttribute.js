@@ -19,7 +19,7 @@ export default class FeaturesAttribute extends Attribute {
 
   processInput(input) {
 
-    let inputValue = input.info;
+    let inputValue = input.value;
     if (!inputValue) return;
   
     if (inputValue.featureSource == "self") {

@@ -1,5 +1,6 @@
 "use strict";
 
+import isEmptyObj from "../helpers/isEmptyObj.js";
 import Calculation from "./Calculation.js";
 
 export const linkType = {
@@ -10,7 +11,7 @@ export const linkType = {
 export class Link {
 
   constructor(attributes, source) {
-    this.attributes = attributes;
+    this._attributes = attributes;
     this.source = source;
     this.isSetup = false;
     this._attribute = {"valid" : false, "data" : undefined};
@@ -25,15 +26,19 @@ export class Link {
     this.type = type; 
     this.attribute = attribute;
     this.info = info;
+    // if (this.attribute.name == "con") console.log("attributes list!");
+    // if (this.attribute.name == "con") console.log(this._attributes);
   }
 
   refreshinfoValidity() {
 
-    if (this.type.includes("calculated")) {
-      this._info["valid"] = this.info.getValidity();
-    } else {
-      this._info["valid"] = true;
-    }
+    this._info["valid"] = true;
+
+    // if (this.type.includes("calculated")) {
+    //   this._info["valid"] = this.info.getValidity();
+    // } else {
+    //   this._info["valid"] = true;
+    // }
 
   }
 
@@ -42,21 +47,23 @@ export class Link {
     if (!this.isSetup) return undefined;
 
     if (!this._formula) return this.info;
+    // if (this.attribute.name == "con") console.log("get the formula");
+    // if (this.attribute.name == "con") console.log(this._formula);
 
-    console.log("this formula is:")
-    console.log(this._formula);
+    let formulaToValues = (calc) => {
+      if (calc.constructor.name == "Calculation") return (calc.calculate());
+      return (calc);
+    };
 
-    let evaluated = this._formula.map( (calc) => {
-      if (typeof calc === "string") return (calc);
-      else return (calc.calculate());
-      }
-    );
-    console.log("evaluated is:");
-    console.log(evaluated);
-    let joined = evaluated.join("");
-    console.log("joined is: " + joined);
-    return(joined);
+    let evaluated = {};
+    for (let [key, formulae] of Object.entries(this._formula)) {
+      if (formulae.constructor.name == "String") evaluated[key] = formulae;
+      else evaluated[key] = formulae.map(formulaToValues).join("");
+    }
+    // if (this.attribute.name == "con") console.log("get evaluated");
+    // if (this.attribute.name == "con") console.log(evaluated);
 
+    return(evaluated);
   }
 
   set info(newInfo) {
@@ -65,35 +72,59 @@ export class Link {
 
     // update effect info
     let oldInfo = Object.assign({}, this._info['data']);
+    // if (this.attribute.name == "con") {
+    //   console.log("oldinfo");
+    //   console.log(oldInfo);
+    //   console.log("newinfo");
+    //   console.log(newInfo);
+    // }
     if (oldInfo == newInfo) return;
     this._info['data'] = newInfo;
-    this._formula = undefined;
-    
-    if ("formula" in newInfo) {
-      let calc = this.calculationFromFormulaText(newInfo.formula);
-      this._formula = calc; 
+    this._formula = {};
 
-      this._info["valid"] = calc.reduce( (prev, c) => {
-        if (typeof c === "string") return prev;
+    // let tmp = Object.assign(newInfo);
+    // delete tmp.formula;
+    // if (!isEmptyObj(tmp)) {
+    //   console.log(this.attribute.name);
+    //   console.log(tmp);
+    // }
+    // if (this.attribute.name == "con") {
+    //   console.log("oldinfo");
+    //   console.log(oldInfo);
+    //   console.log("newinfo");
+    //   console.log(newInfo);
+    // }
+    // console.log(newInfo);
 
-        console.log(c);
-        return (prev && c.getValidity());
-      }, true);
+    for (let [key, value] of Object.entries(newInfo)) {
 
-      this.inputs = Array.from(
-        calc.reduce(getAllInputs, new Set())
-      );
-      
-    } else {
-      this._info["valid"] = true;
-      this.inputs = [];
+    // if ("formula" in newInfo) {
+        // if (this.attribute.name == "con") console.log("con text");
+        // if (this.attribute.name == "con") console.log(value);
+        // if (this.attribute.name == "con") console.log(this._attributes);
+        let calc = this.calculationFromFormulaText(value);
+        // if (this.attribute.name == "con") console.log(calc);
+        this._formula[key] = calc; 
+
+        // this._info["valid"] = calc.reduce( (prev, c) => {
+        //   if (typeof c === "string") return prev;
+        //   return (prev && c.getValidity());
+        // }, true);
+
+        this._info["valid"] = true;
+
+        this.inputs = Array.from(
+          calc.reduce(getAllInputs, new Set())
+        );
+        
+      // } else {
+      //   this._info["valid"] = true;
+      //   this.inputs = [];
+      // }
     }
 
     this.isSetup = (this._info["valid"] && this._attribute["valid"]);
-
-    console.log("this formula is:");
-    console.log(this._formula);
-    console.log(this);
+    if (this.attribute.name == "con") console.log("setup is: " + this.isSetup);
 
     if (this.isSetup) {
       this.inputs.forEach((attr) => attr.listeners.push(this));
@@ -112,7 +143,7 @@ export class Link {
 
     if (typeof newAttribute === "string") {
       
-      if (!this.attributes.contains(newAttribute)) {
+      if (!this._attributes.contains(newAttribute)) {
         this.removeLinks();
         this._attribute["valid"] = false;
         this._attribute["data"] = undefined;
@@ -120,7 +151,7 @@ export class Link {
         return;
       }
 
-      newAttribute = this.attributes.get(newAttribute);
+      newAttribute = this._attributes.get(newAttribute);
     }
 
     this.removeLinks();
@@ -169,24 +200,35 @@ export class Link {
 
 
   calculationFromFormulaText(text) {
+
+    // if (text == "{{base-ability-score-con}}") console.log("here I go adding things");
+
+    let splitTexts;
     if (/[^\\]\$/.test(text)) {
-      let subtexts = text.split("$");
-      let calcs = subtexts.map( (txt, i) => {
-        if (i % 2 == 0) return txt;
-        else return new Calculation(txt);
-      });
-      // console.log(calcs);
-      return(calcs);
-    }
-    
-    let formulaText;
-    if (text[0] == "+" || text[0] == "-" || /^\s*$/.test(text))  {
-      formulaText = "0" + text;
+      splitTexts = text.split(/(?<!\\)\$/);
     } else {
-      formulaText = text;
+      splitTexts = ["", text];
     }
-    let calc = new Calculation(formulaText, this.attributes, this);
-    return([calc]);
+    // if (text == "{{base-ability-score-con}}") console.log(splitTexts);
+
+    let calcs = splitTexts.map( (text, i) => {
+      if (i % 2 == 0) return text;
+      if (text[0] == "+" || text[0] == "-" || /^\s*$/.test(text))  {
+        text = "0" + text;
+      } 
+      // let calc = new Calculation(formulaText, this._attributes, this);
+      let calc =  new Calculation(text, this._attributes, this);
+
+      // console.log(calc);
+      // console.log(getValidity());
+      if (calc.getValidity()) return calc;
+      return text;
+      // else return new Calculation(txt, this._attributes, this);
+    });
+    if (!calcs) return([]);
+    // if (text == "{{base-ability-score-con}}") console.log("I am just about to return");
+    // if (text == "{{base-ability-score-con}}") console.log(calcs);
+    return(calcs);
   }
 }
 

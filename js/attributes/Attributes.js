@@ -20,7 +20,7 @@ export const AttributeTypes = {
 export default class Attributes {
 
   constructor() {
-    this.attributeList = [];
+    this.attributeList = {};
   }
 
   loadAttributes() {
@@ -109,6 +109,7 @@ export default class Attributes {
     }
 
     this.attributeList[name] = attribute;
+
     return (attribute);
 
   }

@@ -24,6 +24,7 @@ export default class Links {
     let name = this.generateUniqueID();
 
     let effect = new Link(this.attributes, source);
+    // if (attribute == "con") console.log(this.attributes);
 
     effect.name = name;
     effect.attribute = attribute;
@@ -33,7 +34,13 @@ export default class Links {
       if (type == linkType.FIXED) {
         effect.info = {"value" : info};
       } else if (type == linkType.CALCULATED) {
-        effect.info = {"formula" : info}
+        effect.info = {"formula" : info};
+        // if (attribute == "con") {
+        //   console.log("setting con mod to");
+        //   console.log(effect._info);
+        //   console.log(effect.value);
+        // }
+        
       } else {
         new Error(`unknown type: ${type}`);
       }
