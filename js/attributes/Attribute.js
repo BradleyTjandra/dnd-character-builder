@@ -30,7 +30,7 @@ export default class Attribute {
 
     // if fixed we don't calculate this, this is set by the user
     if (this.calcType == "calculated") {
-      console.log(`calculating ${this.name}`);
+      // console.log(`calculating ${this.name}`);
       this.value = this.inputs.reduce((sum, i) => sum+parseFloat(i.value?.formula ?? 0), 0);
     } else if (this.calcType == "concat") {
       this.value = this.inputs.map(item => item.value);
