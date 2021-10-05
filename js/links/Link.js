@@ -157,8 +157,9 @@ export class Link {
     }
 
     let calcs = splitTexts.map( (text, i) => {
+      if (/^\s*$/.test(text)) return text;
       if (i % 2 == 0) return text;
-      if (text[0] == "+" || text[0] == "-" || /^\s*$/.test(text))  {
+      if (text[0] == "+" || text[0] == "-")  {
         text = "0" + text;
       } 
       let calc =  new Calculation(text, this._attributes, this);

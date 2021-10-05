@@ -62,7 +62,7 @@ export default class FeaturesDisplay extends Display {
     let description = featuresData.description[rowId];
     if (!description) description = "";
   
-    td.innerHTML = `<div><b><i>${name}</i></b>${description}</div>`;
+    td.innerHTML = `<div><b><i>${name}</i></b> ${description}</div>`;
     return(td);
   }
 
