@@ -75,7 +75,12 @@ export class Controller {
 
     function pairSkills(ability, symbol) {
       this.effects.add(`${symbol}skill`, `{{${ability}mod}}`, this, "calculated");
-      this.effects.add(`${symbol}skill`, `if({{${symbol}expertise}}, 2*{{prof}}, if({{${symbol}prof}}, {{prof}}, 0))`, this, "calculated");
+      let skillModText = `
+        if({{${symbol}expertise}}, 2*{{prof}},
+        if({{${symbol}prof}}, {{prof}}, 
+        if({{jackofalltrades}}, {{prof}}/2,
+        0)))`;
+      this.effects.add(`${symbol}skill`, skillModText, this, "calculated");
       
       let profCalc = new ContainsCalculation(`${symbol} %in% {{skillprof}}`, this.attributes);
       this.effects.add(`${symbol}prof`, profCalc, this, linkType.CALCULATED);

@@ -15,6 +15,7 @@ export const AttributeTypes = {
   FIXED : "fixed",
   RESOURCE : "resource",
   HITDICE : "hitdice",
+  BOOLEAN_OR : "boolean_or",
 }
 
 export default class Attributes {
@@ -60,7 +61,7 @@ export default class Attributes {
 
     this.add("skillprof", AttributeTypes.JOINED);
     this.add("skillexpertise", AttributeTypes.JOINED);
-    this.add("jackofalltrades", AttributeTypes, "boolean_or");
+    this.add("jackofalltrades", AttributeTypes.BOOLEAN_OR);
 
     this.add("prof", AttributeTypes.CALCULATED);
 
@@ -121,8 +122,8 @@ export default class Attributes {
   createSkill(skill) {
 
     this.add(`${skill}skill`, AttributeTypes.CALCULATED);
-    this.add(`${skill}prof`, "boolean_or");
-    this.add(`${skill}expertise`, "boolean_or");
+    this.add(`${skill}prof`, AttributeTypes.BOOLEAN_OR);
+    this.add(`${skill}expertise`, AttributeTypes.BOOLEAN_OR);
 
   }
 
