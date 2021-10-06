@@ -1,6 +1,5 @@
 "use strict";
 
-import isEmptyObj from "../helpers/isEmptyObj.js";
 import Calculation from "./Calculation.js";
 
 export const linkType = {
@@ -39,13 +38,13 @@ export class Link {
     if (!this._formula) return this.info;
 
     let formulaToValues = (calc) => {
-      if (calc.constructor.name == "Calculation") return (calc.calculate());
+      if (calc instanceof Calculation) return (calc.calculate());
       return (calc);
     };
 
     let evaluated = {};
     for (let [key, formulae] of Object.entries(this._formula)) {
-      if (formulae.constructor.name == "String") evaluated[key] = formulae;
+      if (formulae.constructor.name === "string") evaluated[key] = formulae;
       else evaluated[key] = formulae.map(formulaToValues).join("");
     }
 
@@ -62,15 +61,22 @@ export class Link {
     this._info['data'] = newInfo;
     this._formula = {};
 
-    for (let [key, value] of Object.entries(newInfo)) {
-
-      let calc = this.calculationFromFormulaText(value);
-      this._formula[key] = calc; 
-      this._info["valid"] = true;
-      this.inputs = Array.from(
-        calc.reduce(getAllInputs, new Set())
-      );
+    if (newInfo instanceof Calculation) {
+      this._formula.formula = [newInfo];
+    } else {
+      for (let [key, value] of Object.entries(newInfo)) {
+        let calc = this.calculationFromFormulaText(value);
+        this._formula[key] = calc; 
+      }
     }
+
+    this._info["valid"] = true;
+    
+    let iterableFormulae = Object.values(this._formula);
+    let setOfInputs = iterableFormulae.reduce(getAllInputs, new Set());
+    this.inputs = Array.from(setOfInputs);
+    // console.log(this._formula);
+    // console.log(this.inputs);
 
     this.isSetup = (this._info["valid"] && this._attribute["valid"]);
 
@@ -171,7 +177,14 @@ export class Link {
   }
 }
 
-function getAllInputs(prev, calc) {
-  if (calc.constructor.name == "Calculation") return new Set([...prev, ...calc.getInputs()]);
-  else return prev;
+function getAllInputs(prev, formulae) {
+  if (formulae instanceof Calculation) return new Set([...prev, ...formulae.getInputs()]);
+  else if (typeof formulae === "string") return prev;
+  else if (formulae instanceof Array) return new Set([
+    ...prev, 
+    ...formulae.reduce(getAllInputs, new Set())
+  ]);
+  console.log(formulae);
+  console.log(formulae.constructor.name);
+  throw "Error!";
 }

@@ -31,11 +31,18 @@ export default class Attribute {
     // if fixed we don't calculate this, this is set by the user
     if (this.calcType == "calculated") {
       // console.log(`calculating ${this.name}`);
-      this.value = this.inputs.reduce((sum, i) => sum+parseFloat(i.value?.formula ?? 0), 0);
+      this.value = this.inputs.reduce((sum, i) => {
+        let newVal = i.value?.formula;
+        let newValAsFloat = parseFloat(newVal);
+        if (!newValAsFloat || isNaN(newValAsFloat)) newValAsFloat = 0;
+        return(sum + newValAsFloat);
+      }, 0);
     } else if (this.calcType == "concat") {
       this.value = this.inputs.map(item => item.value);
     } else if (this.calcType == "boolean_or") {
-      this.value = this.inputs.reduce((sum, current) => sum || current.value, false);
+      this.value = this.inputs.reduce((sum, current) => {
+        return(sum || checkTruthiness(current.value?.formula))
+      }, false);
     } else if (this.calcType == "resource") {
 
       let totalValue = sumOver(this.inputs);
@@ -97,4 +104,13 @@ export default class Attribute {
 
   }
 
+}
+
+function checkTruthiness(text) {
+  if (!text) return false;
+  text = text.trim();
+  if (text == "false") return false;
+  if (text == "0") return false;
+  if (text == "") return false;
+  return true;
 }

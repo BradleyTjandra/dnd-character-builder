@@ -20,7 +20,7 @@ export default class Calculation {
   set formula(formula) {
 
     this.isValid = true;
-    this.parseFormula(formula);
+    this._parseFormula(formula);
     this.getInputs();
 
   }
@@ -117,11 +117,11 @@ export default class Calculation {
 
   }
 
-  nextCharCompare(string, pattern, from=0) {
+  _nextCharCompare(string, pattern, from=0) {
     return(string.substr(from, pattern.length) == pattern);
   }
 
-  splitAt(string, index, length) {
+  _splitAt(string, index, length) {
     return ([
       string.substr(index, length),
       new Calculation(string.substr(0, index), this.attributes, this),
@@ -129,14 +129,14 @@ export default class Calculation {
     ]);
   }
 
-  isExitingGrouping(substr, stack, otherStacks) {
+  _isExitingGrouping(substr, stack, otherStacks) {
 
     // we haven't entered the group, so can't exit
     if (stack.length == 0) return false;
 
     // not a symbol to exit the group
     let closingSymbol = this.bracketingEndings[stack[0].symbol];
-    if (!this.nextCharCompare(substr, closingSymbol)) return false;
+    if (!this._nextCharCompare(substr, closingSymbol)) return false;
 
     // we are exiting a different grouping 
     let mostRecentGroupEntry = otherStacks.reduce( (accum, stack) => {
@@ -157,7 +157,7 @@ export default class Calculation {
 
   }
 
-  parseFormula(formula) {
+  _parseFormula(formula) {
 
     this.op = undefined;
     this.arg1 = undefined;
@@ -187,10 +187,10 @@ export default class Calculation {
       let substr = formula.substr(i);
       
       // Bracketing
-      if (this.nextCharCompare(substr, "(")) {
+      if (this._nextCharCompare(substr, "(")) {
         workingBracketStack.unshift( {"start" : i, "symbol" : substr[0]} );
         continue;
-      } else if (this.isExitingGrouping(substr, workingBracketStack, [workingIfStack])) {
+      } else if (this._isExitingGrouping(substr, workingBracketStack, [workingIfStack])) {
         latestBracketGroup = workingBracketStack.shift();
         latestBracketGroup.end = i;
       }
@@ -198,11 +198,11 @@ export default class Calculation {
       if (workingBracketStack.length > 0) continue;
 
       // Attribute bracketing
-      if (this.nextCharCompare(substr, "{{")) {
+      if (this._nextCharCompare(substr, "{{")) {
         attributeBracketLevel++;
         firstFeatBracketGroupStart = firstFeatBracketGroupStart ?? i;
         currentIfGroupOpening = 0;
-      } else if (this.nextCharCompare(substr, "}}")) {
+      } else if (this._nextCharCompare(substr, "}}")) {
         attributeBracketLevel--;
         firstFeatBracketGroupEnd = firstFeatBracketGroupEnd ?? i;
       }
@@ -210,7 +210,7 @@ export default class Calculation {
       if (attributeBracketLevel > 0) continue;
 
       // if statements
-      if (this.nextCharCompare(substr.toLowerCase(), "if(")) {
+      if (this._nextCharCompare(substr.toLowerCase(), "if(")) {
 
         workingIfStack.unshift( {"start" : i, "symbol" : "if("} );
 
@@ -218,7 +218,7 @@ export default class Calculation {
         i = i + 2;
         continue;
 
-      } else if (this.nextCharCompare(substr, ",")) {
+      } else if (this._nextCharCompare(substr, ",")) {
 
         let currentIfGrouping = workingIfStack[workingIfStack.length-1];
         if (!currentIfGrouping) break;
@@ -226,7 +226,7 @@ export default class Calculation {
         if(!currentIfGrouping.comma1) currentIfGrouping.comma1 = i;
         else if (!currentIfGrouping.comma2) currentIfGrouping.comma2 = i;
         
-      } else if (this.isExitingGrouping(substr, workingIfStack, [workingBracketStack])) {
+      } else if (this._isExitingGrouping(substr, workingIfStack, [workingBracketStack])) {
 
         // is this close bracket already "claimed" by the bracket grouping?
         if (latestBracketGroup?.end != i || latestBracketGroup?.symbol != "(") {
@@ -236,18 +236,18 @@ export default class Calculation {
       }
 
       // Other symbols
-      if (this.nextCharCompare(substr, ">=") 
-            || this.nextCharCompare(substr, "<=") 
-            || this.nextCharCompare(substr, "!=")
-            || this.nextCharCompare(substr, "==")) {
+      if (this._nextCharCompare(substr, ">=") 
+            || this._nextCharCompare(substr, "<=") 
+            || this._nextCharCompare(substr, "!=")
+            || this._nextCharCompare(substr, "==")) {
         firstTwoCharEq = firstTwoCharEq ?? i;
-      } else if (this.nextCharCompare(substr, "=") 
-            || this.nextCharCompare(substr, ">") 
-            || this.nextCharCompare(substr, "<")) {
+      } else if (this._nextCharCompare(substr, "=") 
+            || this._nextCharCompare(substr, ">") 
+            || this._nextCharCompare(substr, "<")) {
         firstCompare = firstCompare ?? i;
-      } else if (this.nextCharCompare(substr, "*") || this.nextCharCompare(substr, "/")) {
+      } else if (this._nextCharCompare(substr, "*") || this._nextCharCompare(substr, "/")) {
         firstMultDiv = firstMultDiv ?? i;
-      } else if (this.nextCharCompare(substr, "+") || this.nextCharCompare(substr, "-")) {
+      } else if (this._nextCharCompare(substr, "+") || this._nextCharCompare(substr, "-")) {
         firstPlusMinus = firstPlusMinus ?? i;
       }
     }
@@ -271,10 +271,10 @@ export default class Calculation {
       this.arg2 = new Calculation(formula.slice(latestIfGroup?.comma1+1, latestIfGroup?.comma2), this.attributes);
       this.arg3 = new Calculation(formula.slice(latestIfGroup?.comma2+1, formula.length-1), this.attributes);
     } else if (firstTwoCharEq) {
-      [this.op, this.arg1, this.arg2] = this.splitAt(formula, firstTwoCharEq, 2);
+      [this.op, this.arg1, this.arg2] = this._splitAt(formula, firstTwoCharEq, 2);
     } else if (firstPlusMinus || firstMultDiv || firstCompare) {
       let firstSymbol = firstPlusMinus || firstMultDiv || firstCompare;
-      [this.op, this.arg1, this.arg2] = this.splitAt(formula, firstSymbol, 1);
+      [this.op, this.arg1, this.arg2] = this._splitAt(formula, firstSymbol, 1);
     } else {
       this.op = "id";
       this.arg1 = formula;

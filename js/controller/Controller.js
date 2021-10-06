@@ -3,6 +3,9 @@
 import Views from "../view/Views.js"
 import Attributes from "../attributes/Attributes.js";
 import Links from "../links/Links.js"
+import Calculation from "../links/Calculation.js";
+import { linkType } from "../links/Link.js";
+import ContainsCalculation from "../links/ContainsCalculation.js";
 
 export class Controller {
   
@@ -73,6 +76,12 @@ export class Controller {
     function pairSkills(ability, symbol) {
       this.effects.add(`${symbol}skill`, `{{${ability}mod}}`, this, "calculated");
       this.effects.add(`${symbol}skill`, `if({{${symbol}expertise}}, 2*{{prof}}, if({{${symbol}prof}}, {{prof}}, 0))`, this, "calculated");
+      
+      let profCalc = new ContainsCalculation(`${symbol} %in% {{skillprof}}`, this.attributes);
+      this.effects.add(`${symbol}prof`, profCalc, this, linkType.CALCULATED);
+
+      let expertCalc = new ContainsCalculation(`${symbol} %in% {{skillexpertise}}`, this.attributes);
+      this.effects.add(`${symbol}expertise`, expertCalc, this, linkType.CALCULATED);
     }
 
     let boundFunc = pairSkills.bind(this);

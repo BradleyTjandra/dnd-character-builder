@@ -58,6 +58,10 @@ export default class Attributes {
     "perception", "performance", "persuasion", "religion", "sleightofhand", "stealth", 
     "survival"].forEach( boundFunc );
 
+    this.add("skillprof", AttributeTypes.JOINED);
+    this.add("skillexpertise", AttributeTypes.JOINED);
+    this.add("jackofalltrades", AttributeTypes, "boolean_or");
+
     this.add("prof", AttributeTypes.CALCULATED);
 
     this.add("background-name", AttributeTypes.CALCULATED);
